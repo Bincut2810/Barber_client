@@ -1,0 +1,4 @@
+export const apiGetListSystemKey = "common/getListSystemkey"
+export const apiGetListProvince = "https://provinces.open-api.vn/api/p"
+export const apiGetListDistrict = "https://provinces.open-api.vn/api/d"
+export const apiInsertParentKey = "common/insertParentKey"

@@ -1,0 +1,74 @@
+@mixin className($backgroundColor,
+  $borderColor,
+  $color,
+  $hoverBackground,
+  $hoverBorderColor,
+  $hoverColor) {
+
+  background: $backgroundColor !important;
+  border-color: $borderColor !important;
+  color: $color !important;
+
+  &:hover {
+    background: $hoverBackground !important;
+    border-color: $hoverBorderColor !important;
+    color: $hoverColor !important;
+  }
+
+  &:focus {
+    outline: none !important;
+  }
+}
+
+.primary {
+  @include className(var(--color-primary), transparent, white, var(--color-primary-hover), transparent, white)
+}
+
+.primary-type-2 {
+  @include className(var(--color-primary), transparent, white, white, var(--color-primary), black)
+}
+
+.third {
+  @include className(white, var(--color-primary), var(--color-primary), white, var(--color-primary), var(--color-primary))
+}
+
+.third-type-2 {
+  @include className(white, var(--color-primary), var(--color-primary), var(--color-primary-hover), transparent, white)
+}
+
+.red {
+  @include className(#EB5757, transparent, white, #EB5757, transparent, white)
+}
+
+.yellow-btn {
+  @include className(var(--color-yellow), transparent, black, var(--color-yellow-hover), transparent, black)
+}
+
+.transparent-btn {
+  @include className(transparent, transparent, black, transparent, transparent, black)
+}
+
+.submit-btn {
+  font-weight: 600 !important;
+  border-radius: 40px !important;
+  width: 100% !important;
+  height: 40px !important;
+}
+
+.mini-size {
+  font-size: 13px !important;
+  padding: 2px 10px 3px 8px !important;
+  border-radius: 30px !important;
+}
+
+.medium-size {
+  font-size: 17px !important;
+  padding: 18px !important;
+  border-radius: 25px !important;
+}
+
+.big-size {
+  font-size: 17px !important;
+  padding: 20px !important;
+  border-radius: 25px !important;
+}
