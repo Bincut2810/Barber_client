@@ -1,15 +1,18 @@
-import { useSelector } from "react-redux"
+import { useDispatch, useSelector } from "react-redux"
 import { globalSelector } from "src/redux/selector"
 import dayjs from "dayjs"
 import { getListComboKey } from "src/lib/commonFunction"
 import { SYSTEM_KEY } from "src/lib/constant"
-import { Col, Descriptions, Image, Row } from "antd"
+import { Col, Descriptions, Image, Row, Space } from "antd"
 import { formatMoney } from "src/lib/stringUtils"
 import { useState } from "react"
 import ButtonCustom from "src/components/MyButton/ButtonCustom"
 import ScheduleSetting from "./components/ScheduleSetting"
 import ServiceSetting from "./components/ServiceSetting"
 import { defaultDays } from "src/lib/dateUtils"
+import { toast } from "react-toastify"
+import UserService from "src/services/UserService"
+import globalSlice from "src/redux/globalSlice"
 
 const UserProfile = () => {
 
@@ -17,6 +20,26 @@ const UserProfile = () => {
   const gender = getListComboKey(SYSTEM_KEY.GENDER, listSystemKey)
   const [openServiceSetting, setOpenServiceSetting] = useState(false)
   const [openScheduleSetting, setOpenScheduleSetting] = useState(false)
+  const [loading, setLoading] = useState(false)
+  const dispatch = useDispatch()
+
+  const requestConfirmRegister = async () => {
+    try {
+      setLoading(true)
+      if (!user?.Services?.length) {
+        return toast.error("Bạn hãy bổ sung dịch vụ của mình")
+      }
+      if (!user?.Schedules?.length) {
+        return toast.error("Bạn hãy bổ sung thời gian làm việc của mình")
+      }
+      const res = await UserService.requestConfirmRegister()
+      if (!!res?.isError) return toast.error(res?.msg)
+      dispatch(globalSlice.actions.setUser(res?.data))
+      toast.success(res?.msg)
+    } finally {
+      setLoading(false)
+    }
+  }
 
   const itemInfo = [
     {
@@ -101,7 +124,7 @@ const UserProfile = () => {
           }
         />
       </Col>
-      <Col span={24}>
+      <Col span={24} className="mb-30">
         <Descriptions
           title="Thời gian làm việc"
           size="small"
@@ -115,6 +138,17 @@ const UserProfile = () => {
             </ButtonCustom>
           }
         />
+      </Col>
+      <Col span={24}>
+        <Space className="d-flex-end">
+          <ButtonCustom
+            className="third-type-2"
+            loading={loading}
+            onClick={() => requestConfirmRegister()}
+          >
+            Gửi yêu cầu kiểm duyệt
+          </ButtonCustom>
+        </Space>
       </Col>
 
       {

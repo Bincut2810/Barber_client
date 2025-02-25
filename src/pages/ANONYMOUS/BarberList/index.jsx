@@ -30,7 +30,7 @@ const BarberList = () => {
 
   return (
     <SpinCustom spinning={loading}>
-      <Row>
+      <Row gutter={[12]}>
         {
           barbers?.map(i =>
             <Col

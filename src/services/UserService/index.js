@@ -13,7 +13,8 @@ import {
   apiUpdateSchedule,
   apiUpdateService,
   apiGetListBarber,
-  apiGetDetailBarber
+  apiGetDetailBarber,
+  apiRequestConfirmRegister
 } from "./urls"
 
 const getInforByGoogleLogin = (access_token) => axios.get(apiGetInforByGoogleLogin, {
@@ -28,6 +29,7 @@ const logout = () => http.get(apiLogout)
 const getDetailProfile = () => http.get(apiGetDetailProfile)
 const changeProfile = body => http.post(apiChangeProfile, body)
 const getListUser = body => http.post(apiGetListUser, body)
+const requestConfirmRegister = () => http.get(apiRequestConfirmRegister)
 const responseRequestRegister = body => http.post(apiResponseRequestRegister, body)
 const updateSchedule = body => http.post(apiUpdateSchedule, body)
 const updateService = body => http.post(apiUpdateService, body)
@@ -43,6 +45,7 @@ const UserService = {
   getDetailProfile,
   changeProfile,
   getListUser,
+  requestConfirmRegister,
   responseRequestRegister,
   updateSchedule,
   updateService,

@@ -30,18 +30,6 @@ export const MenuAdmin = () => [
     label: "Người dùng"
   },
   {
-    key: Router.QUAN_LY_VAY_CUOI,
-    label: "Váy cưới"
-  },
-  {
-    key: Router.QUAN_LY_TRUNG_TAM,
-    label: "Trung tâm tiệc cưới"
-  },
-  {
-    key: Router.QUAN_LY_THIEP_CUOI,
-    label: "Thiệp cưới"
-  },
-  {
     icon: <div style={{ marginLeft: '-5px' }}>{ListIcons.ICON_LOGOUT}</div>,
     label: "Đăng xuất",
     key: 'logout',
