@@ -17,7 +17,8 @@ import {
   BsCake2,
   BsBarChartFill,
   BsCurrencyDollar,
-  BsGenderAmbiguous
+  BsGenderAmbiguous,
+  BsCardText
 } from "react-icons/bs"
 
 import {
@@ -55,7 +56,7 @@ import {
   AiOutlineSchedule,
   AiOutlineAndroid,
   AiFillDashboard,
-  AiFillWarning
+  AiFillWarning,
 } from "react-icons/ai"
 
 import {
@@ -150,7 +151,7 @@ const ListIcons = {
   ICON_ERROR: <BiErrorAlt className="fs-18" />,
   ICON_SUSCESS: <AiOutlineCheckCircle className="fs-18" />,
   ICON_LIST: <AiOutlineUnorderedList className="fs-18" />,
-  ICON_NEXT: <AiOutlineArrowRight className="fs-18" />,
+  ICON_NEXT: <AiOutlineArrowRight className="fs-18 mt-8 blue-text" />,
   ICON_BACK: <AiOutlineArrowLeft className="fs-18" />,
   ICON_EDIT: <AiFillEdit className="green-text fs-18" />,
   ICON_VIEW: <AiFillEye className="primary-text fs-18" />,
@@ -190,7 +191,7 @@ const ListIcons = {
   ICON_PLUS: <AiFillPlusCircle className="fs-18" />,
   ICON_DOLLAR: <BsCurrencyDollar />,
   ICON_SUBJECT_SETTING: <BiBookReader className="fs-18" />,
-  ICON_NOTED: <AiOutlineFileDone className="fs-18" />,
+  ICON_DONE: <AiOutlineFileDone className="fs-18 green-text" />,
   ICON_UNVIEW: <AiFillEyeInvisible className="fs-18 green-text" />,
   ICON_SEND_BLACK: <BiSend className="fs-18 black-text" />,
   ICON_BLOG: <AiOutlineFileSearch className="fs-18 black-text fw-600" />,
@@ -202,7 +203,8 @@ const ListIcons = {
   ICON_ADMIN: <FaUserCog />,
   ICON_DASHBOARD: <AiFillDashboard className="fs-18" />,
   ICON_ANALYSIS: <CgBrowse className="fs-18" />,
-  ICON_PHONE: <GiSmartphone />
+  ICON_PHONE: <GiSmartphone />,
+  ICON_REVIEW: <BsCardText className="fs-18 blue-text" />
 }
 
 export default ListIcons

@@ -3,31 +3,27 @@ import ListIcons from "../ListIcons"
 
 export const MenuCommon = () => [
   {
-    key: "/dich-vu",
-    label: "DỊCH VỤ",
-  },
-  {
     key: Router.DANH_SACH_BARBER,
     label: "BARBER",
   },
   {
-    key: "/thiep-cuoi-online",
-    label: "THIỆP CƯỚI ONLINE",
-  },
-  {
-    key: "/su-kien",
-    label: "SỰ KIỆN",
-  },
-  {
-    key: "/blog",
-    label: "Blog cưới",
+    key: Router.CACH_HOAT_DONG,
+    label: "CÁCH HOẠT ĐỘNG",
   }
 ]
 
 export const MenuAdmin = () => [
   {
+    key: Router.QUAN_LY_DOANH_THU,
+    label: "Doanh thu"
+  },
+  {
     key: Router.QUAN_LY_NGUOI_DUNG,
     label: "Người dùng"
+  },
+  {
+    key: Router.QUAN_LY_FEEDBACK,
+    label: "Đánh giá của khách hàng"
   },
   {
     icon: <div style={{ marginLeft: '-5px' }}>{ListIcons.ICON_LOGOUT}</div>,
@@ -40,11 +36,15 @@ export const MenuAdmin = () => [
 export const MenuUser = () => [
   {
     key: Router.TRANG_CA_NHAN,
-    label: "Thông tin tài khoản"
+    label: "Thông tin cá nhân"
   },
   {
     key: Router.LICH_BOOKING,
     label: "Lịch book"
+  },
+  {
+    key: Router.CAI_DAT_MAT_KHAU,
+    label: "Đổi mật khẩu"
   },
   {
     icon: <div style={{ marginLeft: '-5px' }}>{ListIcons.ICON_LOGOUT}</div>,

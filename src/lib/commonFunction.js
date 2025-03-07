@@ -1,6 +1,7 @@
 import globalSlice from "src/redux/globalSlice"
 import Router from "src/routers"
 import UserService from "src/services/UserService"
+import socket from "src/socket"
 // import socket from "src/utils/socket"
 
 export const randomNumber = () => {
@@ -20,7 +21,7 @@ export const getListComboKey = (key, listSystemKey) => {
 export const handleLogout = async (dispatch, navigate) => {
   const res = await UserService.logout()
   if (!!res?.isError) return
-  // socket.disconnect()
+  socket.disconnect()
   dispatch(globalSlice.actions.setIsLogin(false))
   dispatch(globalSlice.actions.setIsCheckAuth(false))
   dispatch(globalSlice.actions.setUser({}))

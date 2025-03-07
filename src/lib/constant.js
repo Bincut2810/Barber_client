@@ -1,12 +1,6 @@
 export const SYSTEM_KEY = {
-  ROLES: "Roles",
   REGISTER_STATUS: "RegisterStatus",
-  PAYMENT_TYPE: "PaymentType",
-  PAYMENT_STATUS: "PaymentStatus",
-  PAYMENT_METHOD: "PaymentMethod",
   GENDER: "Gender",
-  CONFIRM_STATUS: "ConfirmStatus",
-  REPORT_TYPE: "ReportType",
   BOOKING_STATUS: "BookingStatus"
 }
 

@@ -35,7 +35,7 @@ export const getRealFee = (price, profitPrecent) => {
 }
 
 export const formatMoney = money => {
-  return (Math.round(money * 100) / 100).toLocaleString().replaceAll(",", ".")
+  return (Math.round(money)).toLocaleString().replaceAll(",", ".")
 }
 
 export const formatNumber = (number) => {

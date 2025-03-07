@@ -1,6 +1,6 @@
-import { Col, Row, Tabs } from "antd"
+import { Col, Rate, Row, Tabs } from "antd"
 import { useEffect, useState } from "react"
-import { useNavigate, useParams } from "react-router-dom"
+import { useLocation, useNavigate, useParams } from "react-router-dom"
 import ListIcons from "src/components/ListIcons"
 import ButtonCustom from "src/components/MyButton/ButtonCustom"
 import SpinCustom from "src/components/SpinCustom"
@@ -8,9 +8,15 @@ import { formatMoney } from "src/lib/stringUtils"
 import Router from "src/routers"
 import UserService from "src/services/UserService"
 import { DivTimeContainer, PatentChildBorder, ServiceItemStyled, TabStyled } from "./styled"
-import { convertSchedules } from "src/lib/dateUtils"
+import { convertMinuteToHour, convertSchedules } from "src/lib/dateUtils"
 import dayjs from "dayjs"
 import ModalBooking from "./components/ModalBooking"
+import { useDispatch, useSelector } from "react-redux"
+import { globalSelector } from "src/redux/selector"
+import globalSlice from "src/redux/globalSlice"
+import FeedbackService from "src/services/FeedbackService"
+import { toast } from "react-toastify"
+import Feedback from "./components/Feedback"
 
 const BarberDetail = () => {
 
@@ -19,6 +25,11 @@ const BarberDetail = () => {
   const [barber, setBarber] = useState()
   const navigate = useNavigate()
   const [openModalBooking, setOpenModalBooking] = useState(false)
+  const { isLogin } = useSelector(globalSelector)
+  const dispatch = useDispatch()
+  const location = useLocation()
+  const [feedbacks, setFeedbacks] = useState([])
+  const [totalFeedback, setTotalFeedback] = useState(0)
 
   const getDetailBarber = async () => {
     try {
@@ -26,6 +37,22 @@ const BarberDetail = () => {
       const res = await UserService.getDetailBarber(BarberID)
       if (!!res?.isError) return navigate(Router.NOT_FOUND)
       setBarber(res?.data)
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const getListFeedback = async () => {
+    try {
+      setLoading(true)
+      const res = await FeedbackService.getListFeedbackOfBarber({
+        PageSize: 10,
+        CurrentPage: 1,
+        BarberID
+      })
+      if (!!res?.isError) return toast.error(res?.msg)
+      setFeedbacks(res?.data?.List)
+      setTotalFeedback(res?.data?.Total)
     } finally {
       setLoading(false)
     }
@@ -57,6 +84,12 @@ const BarberDetail = () => {
     getDetailBarber()
   }, [])
 
+  useEffect(() => {
+    if (!!barber?._id) {
+      getListFeedback()
+    }
+  }, [barber])
+
 
   return (
     <SpinCustom spinning={loading}>
@@ -68,6 +101,10 @@ const BarberDetail = () => {
                 <img
                   src={barber?.AvatarPath}
                   alt=""
+                  style={{
+                    width: "400px",
+                    height: "400px"
+                  }}
                 />
               </div>
             </Col>
@@ -78,21 +115,34 @@ const BarberDetail = () => {
             <Col span={24}>
               <div className="fs-32 fw-600 mb-6">Dịch vụ</div>
             </Col>
-            <Col span={24}>
+            <Col span={24} className="mb-30">
               {
                 barber?.Services?.map(i =>
                   <ServiceItemStyled key={i?._id} className="d-flex-sb mb-12">
                     <div>{i?.ServiceName}</div>
                     <div className="d-flex-sb">
-                      <div className="mr-12 fw-600">{formatMoney(i?.ServicePrice)} VNĐ</div>
+                      <div>
+                        <div className="mr-12 fw-600">{formatMoney(i?.ServicePrice)} VNĐ</div>
+                        <div className="fs-13 gray-text">{convertMinuteToHour(i?.ServiceTime)}</div>
+                      </div>
                       <ButtonCustom
                         className="primary mini-size"
-                        onClick={() => setOpenModalBooking({
-                          Service: i,
-                          Services: barber?.Services,
-                          Schedules: barber?.Schedules,
-                          BarberID: barber?._id
-                        })}
+                        onClick={() => {
+                          if (!isLogin) {
+                            dispatch(globalSlice.actions.setRouterBeforeLogin(location.pathname))
+                            navigate("/dang-nhap")
+                          } else {
+                            setOpenModalBooking({
+                              Service: i,
+                              Services: barber?.Services,
+                              Schedules: barber?.Schedules,
+                              BarberID: barber?._id,
+                              BarberEmail: barber?.Email,
+                              BarberName: barber?.FullName,
+                              BookingSchedules: barber?.BookingSchedules
+                            })
+                          }
+                        }}
                       >
                         Book
                       </ButtonCustom>
@@ -101,6 +151,28 @@ const BarberDetail = () => {
                 )
               }
             </Col>
+            {
+              !!feedbacks?.length &&
+              <Col span={24}>
+                <div className="d-flex-sb mb-12">
+                  <p className="fs-17 fw-700">Đánh giá của khách hàng</p>
+                  <div>
+                    <div className="d-flex-center mb-4">
+                      <div>
+                        <span className="fs-32 fw-600">{barber?.TotalStars / barber?.Stars?.length}</span>
+                        <span>/5</span>
+                      </div>
+                    </div>
+                    <Rate
+                      value={barber?.TotalStars / barber?.Stars?.length}
+                      disabled
+                    />
+                    <div className="d-flex-center gray-text fs-13">Dựa trên {feedbacks?.length} đánh giá</div>
+                  </div>
+                </div>
+                <Feedback feedbacks={feedbacks} />
+              </Col>
+            }
           </Row>
         </Col>
         <Col span={9}>

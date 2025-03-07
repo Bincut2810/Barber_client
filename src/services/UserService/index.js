@@ -14,7 +14,11 @@ import {
   apiUpdateService,
   apiGetListBarber,
   apiGetDetailBarber,
-  apiRequestConfirmRegister
+  apiRequestConfirmRegister,
+  apiChangePassword,
+  apiForgotPassword,
+  apiGetListTopBarber,
+  apiInactiveOrActiveAccount
 } from "./urls"
 
 const getInforByGoogleLogin = (access_token) => axios.get(apiGetInforByGoogleLogin, {
@@ -26,6 +30,8 @@ const register = body => http.post(apiRegister, body)
 const login = body => http.post(apiLogin, body)
 const checkAuth = () => http.get(apiCheckAuth)
 const logout = () => http.get(apiLogout)
+const changePassword = body => http.post(apiChangePassword, body)
+const forgotPassword = body => http.post(apiForgotPassword, body)
 const getDetailProfile = () => http.get(apiGetDetailProfile)
 const changeProfile = body => http.post(apiChangeProfile, body)
 const getListUser = body => http.post(apiGetListUser, body)
@@ -35,6 +41,8 @@ const updateSchedule = body => http.post(apiUpdateSchedule, body)
 const updateService = body => http.post(apiUpdateService, body)
 const getListBarber = body => http.post(apiGetListBarber, body)
 const getDetailBarber = BarberID => http.get(`${apiGetDetailBarber}/${BarberID}`)
+const getListTopBarber = () => http.get(apiGetListTopBarber)
+const inactiveOrActiveAccount = body => http.post(apiInactiveOrActiveAccount, body)
 
 const UserService = {
   getInforByGoogleLogin,
@@ -42,6 +50,8 @@ const UserService = {
   login,
   checkAuth,
   logout,
+  changePassword,
+  forgotPassword,
   getDetailProfile,
   changeProfile,
   getListUser,
@@ -50,7 +60,9 @@ const UserService = {
   updateSchedule,
   updateService,
   getListBarber,
-  getDetailBarber
+  getDetailBarber,
+  getListTopBarber,
+  inactiveOrActiveAccount
 }
 
 export default UserService

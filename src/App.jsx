@@ -11,11 +11,15 @@ import { toast, ToastContainer } from 'react-toastify'
 import { jwtDecode } from "jwt-decode"
 import SpinCustom from './components/SpinCustom'
 import ScrollToTop from './components/ScrollToTop'
-import UpdateBarberInfor from './components/Layout/components/UpdateBarberInfor'
+import UpdateUserProfile from './pages/USER/UserProfile/components/UpdateUserProfile'
+import InactiveModal from './components/Layout/components/InactiveAccount'
+import socket from './socket'
 
 // ADMIN
 const AdminRoutes = React.lazy(() => import("src/pages/ADMIN/AdminRoutes"))
 const UserManagement = React.lazy(() => import("src/pages/ADMIN/UserManagement"))
+const PaymentManagement = React.lazy(() => import("src/pages/ADMIN/PaymentManagement"))
+const FeedbackManagement = React.lazy(() => import("src/pages/ADMIN/FeedbackManagement"))
 
 // ANONYMOUS
 const AnonymousRoutes = React.lazy(() => import("src/pages/ANONYMOUS/AnonymousRoutes"))
@@ -24,11 +28,15 @@ const Login = React.lazy(() => import("src/pages/ANONYMOUS/Login"))
 const Home = React.lazy(() => import("src/pages/ANONYMOUS/Home"))
 const BarberList = React.lazy(() => import("src/pages/ANONYMOUS/BarberList"))
 const BarberDetail = React.lazy(() => import("src/pages/ANONYMOUS/BarberDetail"))
+const ForgotPassword = React.lazy(() => import("src/pages/ANONYMOUS/ForgotPassword"))
+const HowWorkPage = React.lazy(() => import("src/pages/ANONYMOUS/HowWorkPage"))
 
 // USER
 const UserRoutes = React.lazy(() => import("src/pages/USER/UserRoutes"))
 const UserProfile = React.lazy(() => import("src/pages/USER/UserProfile"))
 const MyBooking = React.lazy(() => import("src/pages/USER/MyBooking"))
+const CheckoutPage = React.lazy(() => import("src/pages/USER/CheckoutPage"))
+const AccountUser = React.lazy(() => import("src/pages/USER/AccountUser"))
 
 // ERROR
 const NotFoundPage = React.lazy(() => import("src/pages/ErrorPage/NotFoundPage"))
@@ -71,6 +79,22 @@ const App = () => {
             </LazyLoadingComponent>
           )
         },
+        {
+          path: Router.QUAN_LY_DOANH_THU,
+          element: (
+            <LazyLoadingComponent>
+              <PaymentManagement />
+            </LazyLoadingComponent>
+          )
+        },
+        {
+          path: Router.QUAN_LY_FEEDBACK,
+          element: (
+            <LazyLoadingComponent>
+              <FeedbackManagement />
+            </LazyLoadingComponent>
+          )
+        },
       ]
     },
 
@@ -95,6 +119,22 @@ const App = () => {
           element: (
             <LazyLoadingComponent>
               <MyBooking />
+            </LazyLoadingComponent>
+          )
+        },
+        {
+          path: `${Router.CHECKOUT}/:BookingID`,
+          element: (
+            <LazyLoadingComponent>
+              <CheckoutPage />
+            </LazyLoadingComponent>
+          )
+        },
+        {
+          path: Router.CAI_DAT_MAT_KHAU,
+          element: (
+            <LazyLoadingComponent>
+              <AccountUser />
             </LazyLoadingComponent>
           )
         },
@@ -149,6 +189,22 @@ const App = () => {
             </LazyLoadingComponent>
           )
         },
+        {
+          path: Router.FORGOT_PASSWORD,
+          element: (
+            <LazyLoadingComponent>
+              <ForgotPassword />
+            </LazyLoadingComponent>
+          )
+        },
+        {
+          path: Router.CACH_HOAT_DONG,
+          element: (
+            <LazyLoadingComponent>
+              <HowWorkPage />
+            </LazyLoadingComponent>
+          )
+        },
       ]
     },
     {
@@ -173,17 +229,17 @@ const App = () => {
   const dispatch = useDispatch()
   const navigate = useNavigate()
   const { isCheckAuth, user, routerBeforeLogin } = useSelector(globalSelector)
-  const [openUpdateBarberInfor, setOpenUpdateBarberInfor] = useState(false)
+  const [openUpdateUserProfile, setOpenUpdateUserProfile] = useState(false)
   const location = useLocation()
+  const [openInactiveAccount, setOpenInactiveAccount] = useState(false)
 
   const handleNavigate = (userInfor) => {
-    console.log("userInfor", userInfor);
     if (!!routerBeforeLogin) {
       dispatch(globalSlice.actions.setRouterBeforeLogin(""))
       navigate(routerBeforeLogin)
     } else {
       if (userInfor.RoleID === Roles.ROLE_ADMIN) {
-        navigate(Router.QUAN_LY_NGUOI_DUNG)
+        navigate(Router.QUAN_LY_DOANH_THU)
       } else {
         navigate(Router.TRANG_CHU)
       }
@@ -231,8 +287,8 @@ const App = () => {
       //   IsByGoogle: res?.data?.IsByGoogle
       // })
       // if (!!resTabs?.isError) return
-      // socket.connect()
-      // socket.emit("add-user-online", res?.data?._id)
+      socket.connect()
+      socket.emit("add-user-online", res?.data?._id)
       dispatch(globalSlice.actions.setUser(res?.data))
       // dispatch(globalSlice.actions.setListTabs(resTabs?.data))
       if (location.pathname === Router.DANG_NHAP) {
@@ -243,8 +299,20 @@ const App = () => {
     }
   }
 
+  const getProfitPercent = async () => {
+    try {
+      setLoading(true)
+      const res = await CommonService.getProfitPercent()
+      if (!!res?.isError) return toast.error(res?.msg)
+      dispatch(globalSlice.actions.setProfitPercent(res?.data?.Percent))
+    } finally {
+      setLoading(false)
+    }
+  }
+
   useEffect(() => {
     getListSystemKey()
+    getProfitPercent()
   }, [])
 
   useEffect(() => {
@@ -253,9 +321,15 @@ const App = () => {
 
   useEffect(() => {
     if (!!user?.IsFirstLogin) {
-      setOpenUpdateBarberInfor(user)
+      setOpenUpdateUserProfile(user)
     }
   }, [user])
+
+  useEffect(() => {
+    socket.on('listen-inactive-account', (data) => {
+      setOpenInactiveAccount(data)
+    })
+  }, [])
 
 
   return (
@@ -268,10 +342,18 @@ const App = () => {
       <div>{appRoutes}</div>
 
       {
-        !!openUpdateBarberInfor &&
-        <UpdateBarberInfor
-          open={openUpdateBarberInfor}
-          onCancel={() => setOpenUpdateBarberInfor(false)}
+        !!openUpdateUserProfile &&
+        <UpdateUserProfile
+          open={openUpdateUserProfile}
+          onCancel={() => setOpenUpdateUserProfile(false)}
+        />
+      }
+
+      {
+        !!openInactiveAccount &&
+        <InactiveModal
+          open={openInactiveAccount}
+          onCancel={() => setOpenInactiveAccount(false)}
         />
       }
 

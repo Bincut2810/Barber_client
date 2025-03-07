@@ -57,6 +57,10 @@ body {
   border-color: var(--color-primary) !important;
 }
 
+.ant-select-focused:where(.css-dev-only-do-not-override-19lec04).ant-select-outlined:not(.ant-select-disabled):not(.ant-select-customize-input):not(.ant-pagination-size-changer) .ant-select-selector {
+  border-color: var(--color-primary) !important;
+}
+
 .ant-menu-light .ant-menu-item-selected {
   color: white;
 }

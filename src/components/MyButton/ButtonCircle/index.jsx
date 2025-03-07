@@ -7,12 +7,14 @@ const ButtonCircle = ({
   icon,
   onClick,
   disabled,
+  placement = "top",
   ...remainProps
 }) => {
 
   return (
     <Tooltip
       title={title}
+      placement={placement}
       arrow={false}
     >
       <ButtonCicleStyled

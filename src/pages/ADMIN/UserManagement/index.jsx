@@ -13,6 +13,7 @@ import { getListComboKey } from "src/lib/commonFunction"
 import { SYSTEM_KEY } from "src/lib/constant"
 import { globalSelector } from "src/redux/selector"
 import UserService from "src/services/UserService"
+import socket from "src/socket"
 
 const UserManagement = () => {
 
@@ -54,6 +55,19 @@ const UserManagement = () => {
     }
   }
 
+  const handleInactiveOrActiveAccount = async (body) => {
+    try {
+      setLoading(true)
+      const res = await UserService.inactiveOrActiveAccount(body)
+      if (!!res?.isError) return toast.error(res?.msg)
+      getListUser()
+      toast.success(res?.msg)
+      socket.emit("inactive-account", body?.UserID)
+    } finally {
+      setLoading(false)
+    }
+  }
+
   useEffect(() => {
     getListUser()
   }, [pagination])
@@ -89,13 +103,13 @@ const UserManagement = () => {
       // onClick: () => setOpenModalReasonReject(record)
     },
     {
-      title: !!record?.Account?.IsActive ? "Khóa tài khoản" : "Mở khóa tài khoản",
-      icon: !!record?.Account?.IsActive ? ListIcons?.ICON_BLOCK : ListIcons?.ICON_UNBLOCK,
-      // onClick: () => handleInactiveOrActiveAccount({
-      //   UserID: record?._id,
-      //   IsActive: !!record?.Account?.IsActive ? false : true,
-      //   RegisterStatus: !!record?.Account?.IsActive ? 4 : 3
-      // })
+      title: !!record?.IsActive ? "Khóa tài khoản" : "Mở khóa tài khoản",
+      placement: "topRight",
+      icon: !!record?.IsActive ? ListIcons?.ICON_BLOCK : ListIcons?.ICON_UNBLOCK,
+      onClick: () => handleInactiveOrActiveAccount({
+        UserID: record?._id,
+        IsActive: !!record?.IsActive ? false : true,
+      })
     },
   ]
 
@@ -126,14 +140,14 @@ const UserManagement = () => {
     },
     {
       title: 'Số điện thoại',
-      width: 80,
+      width: 70,
       align: 'center',
       dataIndex: 'Phone',
       key: 'Phone',
     },
     {
       title: "Trạng thái tài khoản",
-      width: 80,
+      width: 60,
       dataIndex: "IsActive",
       align: "center",
       key: "IsActive",
@@ -174,6 +188,7 @@ const UserManagement = () => {
                 disabled={i?.isDisabled}
                 icon={i?.icon}
                 onClick={i?.onClick}
+                placement={i?.placement}
               />
             )
           }

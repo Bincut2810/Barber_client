@@ -1,2 +1,5 @@
 export const apiCreateBooking = "booking/createBooking"
 export const apiGetListMyBooking = "booking/getListMyBooking"
+export const apiChangeBookingStatus = "booking/changeBookingStatus"
+export const apiChangeBookingPaidStatus = "booking/changeBookingPaidStatus"
+export const apiGetDetailBooking = "booking/getDetailBooking"

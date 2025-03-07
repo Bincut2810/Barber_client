@@ -22,7 +22,7 @@ const LayoutUser = ({ children }) => {
 
   return (
     <div className="d-flex-center mt-60">
-      <Row style={{ width: "80%" }} gutter={[16]}>
+      <Row style={{ width: "85%" }} gutter={[16]}>
         <Col span={6}>
           <MenuUserStyled>
             <div

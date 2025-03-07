@@ -7,7 +7,6 @@ import { useLocation, useNavigate } from "react-router-dom"
 import Router from "src/routers"
 import { useSelector } from "react-redux"
 import { globalSelector } from "src/redux/selector"
-import ListIcons from "src/components/ListIcons"
 import { Roles } from "src/lib/constant"
 
 const Header = () => {

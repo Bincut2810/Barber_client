@@ -2,7 +2,7 @@ import { useDispatch, useSelector } from "react-redux"
 import { globalSelector } from "src/redux/selector"
 import dayjs from "dayjs"
 import { getListComboKey } from "src/lib/commonFunction"
-import { SYSTEM_KEY } from "src/lib/constant"
+import { Roles, SYSTEM_KEY } from "src/lib/constant"
 import { Col, Descriptions, Image, Row, Space } from "antd"
 import { formatMoney } from "src/lib/stringUtils"
 import { useState } from "react"
@@ -13,6 +13,7 @@ import { defaultDays } from "src/lib/dateUtils"
 import { toast } from "react-toastify"
 import UserService from "src/services/UserService"
 import globalSlice from "src/redux/globalSlice"
+import UpdateUserProfile from "./components/UpdateUserProfile"
 
 const UserProfile = () => {
 
@@ -20,6 +21,7 @@ const UserProfile = () => {
   const gender = getListComboKey(SYSTEM_KEY.GENDER, listSystemKey)
   const [openServiceSetting, setOpenServiceSetting] = useState(false)
   const [openScheduleSetting, setOpenScheduleSetting] = useState(false)
+  const [openUpdateUserProfile, setOpenUpdateUserProfile] = useState(false)
   const [loading, setLoading] = useState(false)
   const dispatch = useDispatch()
 
@@ -41,7 +43,7 @@ const UserProfile = () => {
     }
   }
 
-  const itemInfo = [
+  const commonItemInfor = [
     {
       key: '1',
       label: 'Tên',
@@ -50,7 +52,9 @@ const UserProfile = () => {
     {
       key: '2',
       label: 'Năm sinh',
-      children: dayjs(user?.DateOfBirth).format("DD/MM/YYYY"),
+      children: !!user?.DateOfBirth
+        ? dayjs(user?.DateOfBirth).format("DD/MM/YYYY")
+        : null,
     },
     {
       key: '3',
@@ -67,6 +71,9 @@ const UserProfile = () => {
       label: 'Giới tính',
       children: gender?.find(i => i?.ParentID === user?.Gender)?.ParentName,
     },
+  ]
+
+  const itemBarberInfo = [
     {
       key: '6',
       label: 'Kinh nghiệm',
@@ -108,48 +115,71 @@ const UserProfile = () => {
   return (
     <Row gutter={[0, 12]}>
       <Col span={24}>
-        <Descriptions title="Thông tin cá nhân" items={itemInfo} />
-      </Col>
-      <Col span={24}>
         <Descriptions
-          title="Thông tin dịch vụ"
-          items={itemServices}
+          title="Thông tin cá nhân"
+          items={
+            user?.RoleID === Roles.ROLE_BARBER ?
+              [...commonItemInfor, ...itemBarberInfo]
+              : commonItemInfor
+          }
           extra={
             <ButtonCustom
               className="third-type-2"
-              onClick={() => setOpenServiceSetting(true)}
+              onClick={() => setOpenUpdateUserProfile(true)}
             >
               Chỉnh sửa
             </ButtonCustom>
           }
         />
       </Col>
-      <Col span={24} className="mb-30">
-        <Descriptions
-          title="Thời gian làm việc"
-          size="small"
-          items={itemSchedules}
-          extra={
-            <ButtonCustom
-              className="third-type-2"
-              onClick={() => setOpenScheduleSetting(true)}
-            >
-              Chỉnh sửa
-            </ButtonCustom>
+      {
+        user?.RoleID === Roles.ROLE_BARBER &&
+        <>
+          <Col span={24}>
+            <Descriptions
+              title="Thông tin dịch vụ"
+              items={itemServices}
+              extra={
+                <ButtonCustom
+                  className="third-type-2"
+                  onClick={() => setOpenServiceSetting(true)}
+                >
+                  Chỉnh sửa
+                </ButtonCustom>
+              }
+            />
+          </Col>
+          <Col span={24} className="mb-30">
+            <Descriptions
+              title="Thời gian làm việc"
+              size="small"
+              items={itemSchedules}
+              extra={
+                <ButtonCustom
+                  className="third-type-2"
+                  onClick={() => setOpenScheduleSetting(true)}
+                >
+                  Chỉnh sửa
+                </ButtonCustom>
+              }
+            />
+          </Col>
+          {
+            user?.RegisterStatus !== 3 &&
+            <Col span={24}>
+              <Space className="d-flex-end">
+                <ButtonCustom
+                  className="third-type-2"
+                  loading={loading}
+                  onClick={() => requestConfirmRegister()}
+                >
+                  Gửi yêu cầu kiểm duyệt
+                </ButtonCustom>
+              </Space>
+            </Col>
           }
-        />
-      </Col>
-      <Col span={24}>
-        <Space className="d-flex-end">
-          <ButtonCustom
-            className="third-type-2"
-            loading={loading}
-            onClick={() => requestConfirmRegister()}
-          >
-            Gửi yêu cầu kiểm duyệt
-          </ButtonCustom>
-        </Space>
-      </Col>
+        </>
+      }
 
       {
         !!openScheduleSetting &&
@@ -164,6 +194,14 @@ const UserProfile = () => {
         <ServiceSetting
           open={openServiceSetting}
           onCancel={() => setOpenServiceSetting(false)}
+        />
+      }
+
+      {
+        !!openUpdateUserProfile &&
+        <UpdateUserProfile
+          open={openUpdateUserProfile}
+          onCancel={() => setOpenUpdateUserProfile(false)}
         />
       }
 

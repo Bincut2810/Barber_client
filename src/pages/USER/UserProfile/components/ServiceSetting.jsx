@@ -1,6 +1,6 @@
 import { Col, Form, Row, Space } from "antd"
 import { useEffect, useState } from "react"
-import { useDispatch } from "react-redux"
+import { useDispatch, useSelector } from "react-redux"
 import { toast } from "react-toastify"
 import InputCustom from "src/components/InputCustom"
 import ListIcons from "src/components/ListIcons"
@@ -10,6 +10,7 @@ import ButtonCustom from "src/components/MyButton/ButtonCustom"
 import { PROFIT_PERCENT } from "src/lib/constant"
 import { formatMoney, getRealFee } from "src/lib/stringUtils"
 import globalSlice from "src/redux/globalSlice"
+import { globalSelector } from "src/redux/selector"
 import UserService from "src/services/UserService"
 
 const ServiceSetting = ({ open, onCancel }) => {
@@ -17,6 +18,7 @@ const ServiceSetting = ({ open, onCancel }) => {
   const [loading, setLoading] = useState(false)
   const [form] = Form.useForm()
   const dispatch = useDispatch()
+  const { user } = useSelector(globalSelector)
 
   const handleChangeService = async () => {
     try {
@@ -36,11 +38,8 @@ const ServiceSetting = ({ open, onCancel }) => {
 
   useEffect(() => {
     form.setFieldsValue({
-      services: !!open?.Services?.length
-        ? open?.Services?.map(i => ({
-          ...i,
-          ServicePrice: formatMoney(i?.ServicePrice)
-        }))
+      services: !!user?.Services?.length
+        ? user?.Services?.map(i => i)
         : [{}],
     })
   }, [])
@@ -80,14 +79,14 @@ const ServiceSetting = ({ open, onCancel }) => {
                     className="third-type-2"
                     onClick={() => add()}
                   >
-                    Thêm mô tả mới
+                    Thêm dịch vụ
                   </ButtonCustom>
                 </div>
               </Col>
               <Col span={24}>
                 {
                   fields.map(({ key, name, ...restField }) =>
-                    <Row className="d-flex" key={key} gutter={[16]}>
+                    <Row className="d-flex mb-16" key={key} gutter={[16]}>
                       <Col span={12}>
                         <Form.Item
                           name={[name, 'ServiceName']}
@@ -100,12 +99,30 @@ const ServiceSetting = ({ open, onCancel }) => {
                           <InputCustom placeholder="Tên dịch vụ" />
                         </Form.Item>
                       </Col>
-                      <Col span={5}>
+                      <Col span={12}>
+                        <Form.Item
+                          name={[name, 'ServiceTime']}
+                          {...restField}
+                          label={<div className="fw-600">Thời gian dịch vụ:</div>}
+                          rules={[
+                            { required: true, message: "Thông tin không được để trống" },
+                          ]}
+                        >
+                          <InputCustom
+                            style={{ width: "100%" }}
+                            type="isNumber"
+                            placeholder="Thời gian dịch vụ (phút)"
+                            min={30}
+                          />
+                        </Form.Item>
+                      </Col>
+                      <Col span={11}>
                         <Form.Item
                           name={[name, 'ServicePrice']}
                           {...restField}
                           label={<div className="fw-600">Giá tiền</div>}
                           rules={[
+                            { required: true, message: "Thông tin không được để trống" },
                             {
                               validator: (rule, value) => {
                                 if (!value) {
@@ -131,7 +148,6 @@ const ServiceSetting = ({ open, onCancel }) => {
                             onChange={e => {
                               const fee = !!e ? e : 0
                               const expense = getRealFee(fee, PROFIT_PERCENT)
-                              console.log("expense", expense);
                               form.setFieldsValue({
                                 services: {
                                   [name]: { ExpensePrice: expense },
@@ -141,11 +157,14 @@ const ServiceSetting = ({ open, onCancel }) => {
                           />
                         </Form.Item>
                       </Col>
-                      <Col span={6}>
+                      <Col span={12}>
                         <Form.Item
                           name={[name, 'ExpensePrice']}
                           {...restField}
                           label={<div className="fw-600">Số tiền bạn nhận được</div>}
+                          rules={[
+                            { required: true, message: "Thông tin không được để trống" },
+                          ]}
                         >
                           <InputCustom
                             style={{

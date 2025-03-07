@@ -128,9 +128,9 @@ export const MenuUserStyled = styled.div`
   flex-direction: column;
   justify-content: space-between;
   height: 100%;
-  .menu-container {
-    border: 1px solid #ddd;
-    height: 100%;
+  .ant-menu-item {
+    border-bottom: 1px solid var(--color-border-matte) !important;
+    padding: 26px 16px !important;
   }
   .ant-menu-light .ant-menu-submenu-selected >.ant-menu-submenu-title {
     color: var(--color-primary) !important;
