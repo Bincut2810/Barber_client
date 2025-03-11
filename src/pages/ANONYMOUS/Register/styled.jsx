@@ -12,16 +12,6 @@ border-radius: 6px;
   height: 1.5rem;
   margin-left: 10px;
 }
-.login-google {
-  background-color: white !important;
-  border-color: #dadce0 !important;
-  padding: 18px;
-  border-radius: 20px;
-  width: 100%;
-  &:hover {
-    color: black !important;
-  }
-}
 .border-radio {
   border: 1px #d9d9d9 solid;
   padding: 8px 16px;

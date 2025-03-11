@@ -23,7 +23,7 @@ const CheckoutPage = () => {
   const navigate = useNavigate()
   const [dataPayment, setDataPayment] = useState()
   const [loading, setLoading] = useState(false)
-  const { user, listSystemKey, profitPercent } = useSelector(globalSelector)
+  const { user } = useSelector(globalSelector)
   const location = useLocation()
   const queryParams = new URLSearchParams(location.search)
   const [openModalSuccessBooking, setOpenModalSuccessBooking] = useState(false)
@@ -58,7 +58,6 @@ const CheckoutPage = () => {
       })
       if (!!resBooking?.isError) return
       const resPayment = await PaymentService.createPayment({
-        Customer: user?._id,
         Booking: BookingID,
         Description: `Thanh toán tiền cọc book barber ${dataPayment?.Barber?.FullName}`,
         TotalFee: dataPayment?.TotalPrice - dataPayment?.TotalExpensePrice,

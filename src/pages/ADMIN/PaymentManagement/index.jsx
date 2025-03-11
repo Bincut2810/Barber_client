@@ -100,7 +100,7 @@ const PaymentManagement = () => {
       <Row gutter={[8, 0]}>
         <Col span={24} className="d-flex-sb">
           <div className="title-type-1">
-            QUẢN LÝ NGƯỜI DÙNG
+            QUẢN LÝ DOANH THU
           </div>
           <div className="mb-12">
             <span className="mr-6">Tổng doanh thu:</span>

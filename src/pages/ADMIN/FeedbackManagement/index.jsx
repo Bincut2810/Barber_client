@@ -97,20 +97,20 @@ const FeedbackManagement = () => {
         </div>
       ),
     },
-    {
-      title: "Trạng thái",
-      width: 80,
-      dataIndex: "IsDeleted",
-      key: "IsDeleted",
-      align: "center",
-      render: (val) => (
-        <Tag className="p-5 fs-16" color={!val ? "success" : "error"}>
-          {
-            !val ? "Đã xóa" : "Hiển thị"
-          }
-        </Tag>
-      ),
-    },
+    // {
+    //   title: "Trạng thái",
+    //   width: 80,
+    //   dataIndex: "IsDeleted",
+    //   key: "IsDeleted",
+    //   align: "center",
+    //   render: (val) => (
+    //     <Tag className="p-5 fs-16" color={!val ? "success" : "error"}>
+    //       {
+    //         !val ? "Đã xóa" : "Hiển thị"
+    //       }
+    //     </Tag>
+    //   ),
+    // },
     {
       title: "Chức năng",
       width: 70,
