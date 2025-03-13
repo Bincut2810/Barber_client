@@ -13,7 +13,7 @@ const FormUserProfile = ({ form, filesCertificate, setFilesCertificate }) => {
   const [preview, setPreview] = useState()
   const { user, listSystemKey } = useSelector(globalSelector)
   const gender = getListComboKey(SYSTEM_KEY.GENDER, listSystemKey)
-  const [previewCertificate, setPreviewCertificate] = useState(false)
+  const [previewCertificate, setPreviewCertificate] = useState()
 
   const handleBeforeUpload = (file, type) => {
     const allowedImageTypes = ["image/jpeg", "image/png", "image/gif"]
@@ -63,6 +63,9 @@ const FormUserProfile = ({ form, filesCertificate, setFilesCertificate }) => {
           </Form.Item>
         </Col>
         <Col span={17}>
+          <Form.Item name='FullName'>
+            <InputCustom placeholder="Nhập vào tên" />
+          </Form.Item>
           <Form.Item
             name='Address'
             rules={[

@@ -1,4 +1,4 @@
-import { Col, Rate, Row, Tabs } from "antd"
+import { Col, Image, Rate, Row, Tabs } from "antd"
 import { useEffect, useState } from "react"
 import { useLocation, useNavigate, useParams } from "react-router-dom"
 import ListIcons from "src/components/ListIcons"
@@ -151,6 +151,21 @@ const BarberDetail = () => {
                 )
               }
             </Col>
+            {
+              !!barber?.Results?.length &&
+              <Col span={24}>
+                <div className="fs-17 fw-700  mb-12">Mẫu tóc mà barber đã thực hiện</div>
+                <Row gutter={[8]}>
+                  {
+                    barber?.Results?.map((i, idx) =>
+                      <Col span={6} key={idx}>
+                        <Image src={i} style={{ width: "180px", height: '150px' }} />
+                      </Col>
+                    )
+                  }
+                </Row>
+              </Col>
+            }
             {
               !!feedbacks?.length &&
               <Col span={24}>

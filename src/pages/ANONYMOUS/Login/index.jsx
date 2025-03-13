@@ -1,9 +1,7 @@
 import { useEffect, useState } from "react"
 import { Col, Form, Row } from "antd"
 import { LoginContainerStyled } from "./styled"
-import { Link, useNavigate } from "react-router-dom"
-import { getRegexEmail } from "src/lib/stringUtils"
-import InputCustom from "src/components/InputCustom"
+import { useNavigate } from "react-router-dom"
 import ButtonCustom from "src/components/MyButton/ButtonCustom"
 import { toast } from "react-toastify"
 import { useDispatch, useSelector } from "react-redux"
@@ -33,7 +31,6 @@ const LoginPage = () => {
             Email: dataFromGoogle.email,
           })
           if (!!res?.isError) return toast.error(res?.msg)
-          toast.success(res?.msg)
           const tokenData = jwtDecode(res?.data)
           const { payload } = tokenData
           if (!!payload.ID) {

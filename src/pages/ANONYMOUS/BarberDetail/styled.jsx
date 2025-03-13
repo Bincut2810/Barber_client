@@ -11,7 +11,7 @@ export const TabStyled = styled.div`
     position: sticky;
     top: ${props => (!!props.isEdit ? "-12px" : 0)};
     background-color: #fff;
-    z-index: 100;
+    /* z-index: 100; */
   }
   .ant-tabs-nav {
     :before {

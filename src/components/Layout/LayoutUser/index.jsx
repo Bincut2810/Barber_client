@@ -37,7 +37,7 @@ const LayoutUser = ({ children }) => {
             </div>
           </MenuUserStyled>
         </Col>
-        <Col span={18}>
+        <Col span={18} style={{ marginBottom: "30px" }}>
           <div>
             {children}
           </div>

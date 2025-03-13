@@ -37,11 +37,15 @@ const ServiceSetting = ({ open, onCancel }) => {
   }
 
   useEffect(() => {
-    form.setFieldsValue({
-      services: !!user?.Services?.length
-        ? user?.Services?.map(i => i)
-        : [{}],
-    })
+    if (!!open?.isUpdate) {
+      form.setFieldsValue({
+        services: user?.Services?.map(i => i),
+      })
+    } else {
+      form.setFieldsValue({
+        services: [{}]
+      })
+    }
   }, [])
 
 
@@ -75,12 +79,15 @@ const ServiceSetting = ({ open, onCancel }) => {
               <Col span={24} className="mb-12">
                 <div className="d-flex-sb">
                   <div className="fs-18 fw-600">Dịch vụ bạn có thể cung cấp cho khách hàng</div>
-                  <ButtonCustom
-                    className="third-type-2"
-                    onClick={() => add()}
-                  >
-                    Thêm dịch vụ
-                  </ButtonCustom>
+                  {
+                    !open?.isUpdate &&
+                    <ButtonCustom
+                      className="third-type-2"
+                      onClick={() => add()}
+                    >
+                      Thêm dịch vụ
+                    </ButtonCustom>
+                  }
                 </div>
               </Col>
               <Col span={24}>
@@ -103,7 +110,7 @@ const ServiceSetting = ({ open, onCancel }) => {
                         <Form.Item
                           name={[name, 'ServiceTime']}
                           {...restField}
-                          label={<div className="fw-600">Thời gian dịch vụ:</div>}
+                          label={<div className="fw-600">Thời gian dịch vụ</div>}
                           rules={[
                             { required: true, message: "Thông tin không được để trống" },
                           ]}

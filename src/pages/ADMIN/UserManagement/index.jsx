@@ -14,6 +14,7 @@ import { SYSTEM_KEY } from "src/lib/constant"
 import { globalSelector } from "src/redux/selector"
 import UserService from "src/services/UserService"
 import socket from "src/socket"
+import ViewProfileUser from "./modal/ViewProfileUser"
 
 const UserManagement = () => {
 
@@ -30,6 +31,7 @@ const UserManagement = () => {
   })
   const { listSystemKey } = useSelector(globalSelector)
   const registerStatus = getListComboKey(SYSTEM_KEY.REGISTER_STATUS, listSystemKey)
+  const [openViewProfile, setOpenViewProfile] = useState(false)
 
   const getListUser = async () => {
     try {
@@ -77,7 +79,7 @@ const UserManagement = () => {
       title: "Xem chi tiết",
       isDisabled: false,
       icon: ListIcons?.ICON_VIEW,
-      // onClick: () => setOpenViewProfile(record)
+      onClick: () => setOpenViewProfile(record)
     },
     {
       title: "Duyệt",
@@ -287,14 +289,13 @@ const UserManagement = () => {
           />
         </Col>
 
-        {/* {
-          !!openModalInsertStaff &&
-          <ModalInsertUpdateStaff
-            open={openModalInsertStaff}
-            onCancel={() => setOpenModalInsertStaff(false)}
-            onOk={getListStaff}
+        {
+          !!openViewProfile &&
+          <ViewProfileUser
+            open={openViewProfile}
+            onCancel={() => setOpenViewProfile(false)}
           />
-        } */}
+        }
 
       </Row>
     </SpinCustom>

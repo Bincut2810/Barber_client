@@ -14,6 +14,7 @@ import { toast } from "react-toastify"
 import UserService from "src/services/UserService"
 import globalSlice from "src/redux/globalSlice"
 import UpdateUserProfile from "./components/UpdateUserProfile"
+import ResultSetting from "./components/ResultSetting"
 
 const UserProfile = () => {
 
@@ -22,6 +23,7 @@ const UserProfile = () => {
   const [openServiceSetting, setOpenServiceSetting] = useState(false)
   const [openScheduleSetting, setOpenScheduleSetting] = useState(false)
   const [openUpdateUserProfile, setOpenUpdateUserProfile] = useState(false)
+  const [openResultSetting, setOpenResultSetting] = useState(false)
   const [loading, setLoading] = useState(false)
   const dispatch = useDispatch()
 
@@ -84,19 +86,11 @@ const UserProfile = () => {
       label: 'Chứng chỉ',
       children: (
         user?.Certificates?.map(i =>
-          <Image style={{ width: '200px', height: "150px" }} key={i} src={i} />
+          <Image style={{ width: '150px', height: "130px" }} key={i} src={i} />
         )
       ),
     },
   ]
-
-  const itemServices = !!user?.Services?.length
-    ? user?.Services?.map(i => ({
-      key: i?._id,
-      label: i?.ServiceName,
-      children: formatMoney(i?.ServicePrice)
-    }))
-    : []
 
   const itemSchedules = []
   defaultDays?.forEach((i, idx) => {
@@ -138,14 +132,30 @@ const UserProfile = () => {
           <Col span={24}>
             <Descriptions
               title="Thông tin dịch vụ"
-              items={itemServices}
+              items={
+                !!user?.Services?.length
+                  ? user?.Services?.map(i => ({
+                    key: i?._id,
+                    label: i?.ServiceName,
+                    children: formatMoney(i?.ServicePrice)
+                  }))
+                  : []
+              }
               extra={
-                <ButtonCustom
-                  className="third-type-2"
-                  onClick={() => setOpenServiceSetting(true)}
-                >
-                  Chỉnh sửa
-                </ButtonCustom>
+                <Space>
+                  <ButtonCustom
+                    className="third-type-2"
+                    onClick={() => setOpenServiceSetting({ isUpdate: false })}
+                  >
+                    Thêm mới
+                  </ButtonCustom>
+                  <ButtonCustom
+                    className="third-type-2"
+                    onClick={() => setOpenServiceSetting({ isUpdate: true })}
+                  >
+                    Chỉnh sửa
+                  </ButtonCustom>
+                </Space>
               }
             />
           </Col>
@@ -161,6 +171,35 @@ const UserProfile = () => {
                 >
                   Chỉnh sửa
                 </ButtonCustom>
+              }
+            />
+          </Col>
+          <Col span={24}>
+            <Descriptions
+              title="Mẫu tóc bạn đã tạo"
+              layout="vertical"
+              items={
+                !!user?.Results?.length
+                  ? [{
+                    key: "1",
+                    label: "Khách hàng có thể nhìn thấy những mẫu tóc bạn đã tạo",
+                    children: (
+                      user?.Results?.map(i =>
+                        <Image style={{ width: '150px', height: "130px" }} key={i} src={i} />
+                      )
+                    ),
+                  }]
+                  : []
+              }
+              extra={
+                <Space>
+                  <ButtonCustom
+                    className="third-type-2"
+                    onClick={() => setOpenResultSetting(true)}
+                  >
+                    Chỉnh sửa
+                  </ButtonCustom>
+                </Space>
               }
             />
           </Col>
@@ -202,6 +241,14 @@ const UserProfile = () => {
         <UpdateUserProfile
           open={openUpdateUserProfile}
           onCancel={() => setOpenUpdateUserProfile(false)}
+        />
+      }
+
+      {
+        !!openResultSetting &&
+        <ResultSetting
+          open={openResultSetting}
+          onCancel={() => setOpenResultSetting(false)}
         />
       }
 

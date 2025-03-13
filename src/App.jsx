@@ -283,15 +283,10 @@ const App = () => {
       setLoading(true)
       const res = await UserService.getDetailProfile()
       if (!!res?.isError) return toast.error(res?.msg)
-      // const resTabs = await CommonService.getListTabs({
-      //   IsByGoogle: res?.data?.IsByGoogle
-      // })
-      // if (!!resTabs?.isError) return
       socket.connect()
       socket.emit("add-user-online", res?.data?._id)
       dispatch(globalSlice.actions.setUser(res?.data))
-      // dispatch(globalSlice.actions.setListTabs(resTabs?.data))
-      if (location.pathname === Router.DANG_NHAP) {
+      if ([Router.DANG_NHAP, Router.DANG_KY].includes(location.pathname)) {
         handleNavigate(res?.data)
       }
     } finally {

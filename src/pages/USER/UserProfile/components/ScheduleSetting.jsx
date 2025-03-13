@@ -1,6 +1,5 @@
 
 import { Col, message, Row, Space } from 'antd'
-import moment from 'moment'
 import { useEffect, useState } from 'react'
 import { Calendar, Views, momentLocalizer } from 'react-big-calendar'
 import "react-big-calendar/lib/css/react-big-calendar.css"
@@ -12,8 +11,8 @@ import UserService from 'src/services/UserService'
 import globalSlice from 'src/redux/globalSlice'
 import { toast } from 'react-toastify'
 import { globalSelector } from 'src/redux/selector'
-import Notice from 'src/components/Notice'
 import { convertToCurrentEquivalent } from 'src/lib/dateUtils'
+import moment from "moment"
 
 const localizer = momentLocalizer(moment)
 moment.updateLocale('en', { week: { dow: 1 } })

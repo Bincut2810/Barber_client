@@ -18,7 +18,8 @@ import {
   apiChangePassword,
   apiForgotPassword,
   apiGetListTopBarber,
-  apiInactiveOrActiveAccount
+  apiInactiveOrActiveAccount,
+  apiUpdateResult
 } from "./urls"
 
 const getInforByGoogleLogin = (access_token) => axios.get(apiGetInforByGoogleLogin, {
@@ -43,6 +44,7 @@ const getListBarber = body => http.post(apiGetListBarber, body)
 const getDetailBarber = BarberID => http.get(`${apiGetDetailBarber}/${BarberID}`)
 const getListTopBarber = () => http.get(apiGetListTopBarber)
 const inactiveOrActiveAccount = body => http.post(apiInactiveOrActiveAccount, body)
+const updateResult = body => http.post(apiUpdateResult, body)
 
 const UserService = {
   getInforByGoogleLogin,
@@ -62,7 +64,8 @@ const UserService = {
   getListBarber,
   getDetailBarber,
   getListTopBarber,
-  inactiveOrActiveAccount
+  inactiveOrActiveAccount,
+  updateResult
 }
 
 export default UserService

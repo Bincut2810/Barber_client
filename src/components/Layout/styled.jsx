@@ -16,6 +16,7 @@ export const ContentContainerStyled = styled.div`
 export const ContentStyled = styled.div`
   width: 80%;
   margin: auto;
+  margin-bottom: 30px;
 `
 
 export const HeaderContainerStyled = styled.div`
@@ -25,7 +26,7 @@ export const HeaderContainerStyled = styled.div`
   top: 0;
   left: 0;
   right: 0;
-  z-index: 1; 
+  z-index: 90; 
   background-color: white;
 `
 

@@ -20,7 +20,7 @@ const UpdateUserProfile = ({ open, onCancel }) => {
   const navigate = useNavigate()
   const dispatch = useDispatch()
   const [filesCertificate, setFilesCertificate] = useState([])
-  const { user, listSystemKey } = useSelector(globalSelector)
+  const { user } = useSelector(globalSelector)
 
   const handleSubmit = async () => {
     try {
@@ -59,6 +59,7 @@ const UpdateUserProfile = ({ open, onCancel }) => {
 
   useEffect(() => {
     const data = {
+      FullName: user?.FullName,
       Address: user?.Address,
       Gender: user?.Gender,
       Phone: user?.Phone,
