@@ -1,11 +1,12 @@
 import { Col, Menu, Row } from "antd"
 import { useState } from "react"
 import { useLocation, useNavigate } from "react-router-dom"
-import { useDispatch } from "react-redux"
+import { useDispatch, useSelector } from "react-redux"
 import ListIcons from "src/components/ListIcons"
 import { MenuAdmin } from "../MenuItems"
 import { handleLogout } from "src/lib/commonFunction"
 import { ContentAdminContainerStyled, MenuAdminStyled } from "../styled"
+import { globalSelector } from "src/redux/selector"
 
 const LayoutAdmin = ({ children }) => {
 
@@ -13,6 +14,7 @@ const LayoutAdmin = ({ children }) => {
   const location = useLocation()
   const dispatch = useDispatch()
   const [collapsed, setCollapsed] = useState(false)
+  const { listTab } = useSelector(globalSelector)
 
   const handleChangeMenu = (key) => {
     if (key !== "logout") {
@@ -34,7 +36,7 @@ const LayoutAdmin = ({ children }) => {
               inlineCollapsed={collapsed}
               mode="inline"
               onClick={e => handleChangeMenu(e.key)}
-              items={MenuAdmin()}
+              items={MenuAdmin()?.filter(i => listTab?.includes(i?.TabID))}
               selectedKeys={[location?.pathname]}
             />
           </div>

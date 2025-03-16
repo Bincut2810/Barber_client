@@ -7,8 +7,7 @@ import ListIcons from "src/components/ListIcons"
 import ModalCustom from "src/components/ModalCustom"
 import ButtonCircle from "src/components/MyButton/ButtonCircle"
 import ButtonCustom from "src/components/MyButton/ButtonCustom"
-import { PROFIT_PERCENT } from "src/lib/constant"
-import { formatMoney, getRealFee } from "src/lib/stringUtils"
+import { getRealFee } from "src/lib/stringUtils"
 import globalSlice from "src/redux/globalSlice"
 import { globalSelector } from "src/redux/selector"
 import UserService from "src/services/UserService"
@@ -18,7 +17,7 @@ const ServiceSetting = ({ open, onCancel }) => {
   const [loading, setLoading] = useState(false)
   const [form] = Form.useForm()
   const dispatch = useDispatch()
-  const { user } = useSelector(globalSelector)
+  const { user, profitPercent } = useSelector(globalSelector)
 
   const handleChangeService = async () => {
     try {
@@ -154,7 +153,7 @@ const ServiceSetting = ({ open, onCancel }) => {
                             }}
                             onChange={e => {
                               const fee = !!e ? e : 0
-                              const expense = getRealFee(fee, PROFIT_PERCENT)
+                              const expense = getRealFee(fee, profitPercent)
                               form.setFieldsValue({
                                 services: {
                                   [name]: { ExpensePrice: expense },

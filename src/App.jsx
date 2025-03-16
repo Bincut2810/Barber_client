@@ -28,7 +28,6 @@ const Login = React.lazy(() => import("src/pages/ANONYMOUS/Login"))
 const Home = React.lazy(() => import("src/pages/ANONYMOUS/Home"))
 const BarberList = React.lazy(() => import("src/pages/ANONYMOUS/BarberList"))
 const BarberDetail = React.lazy(() => import("src/pages/ANONYMOUS/BarberDetail"))
-const ForgotPassword = React.lazy(() => import("src/pages/ANONYMOUS/ForgotPassword"))
 const HowWorkPage = React.lazy(() => import("src/pages/ANONYMOUS/HowWorkPage"))
 
 // USER
@@ -36,7 +35,11 @@ const UserRoutes = React.lazy(() => import("src/pages/USER/UserRoutes"))
 const UserProfile = React.lazy(() => import("src/pages/USER/UserProfile"))
 const MyBooking = React.lazy(() => import("src/pages/USER/MyBooking"))
 const CheckoutPage = React.lazy(() => import("src/pages/USER/CheckoutPage"))
-const AccountUser = React.lazy(() => import("src/pages/USER/AccountUser"))
+const ServicesAndSchedules = React.lazy(() => import("src/pages/USER/ServicesAndSchedules"))
+const MyHairModel = React.lazy(() => import("src/pages/USER/MyHairModel"))
+const BookingDetail = React.lazy(() => import("src/pages/USER/BookingDetail"))
+const Dashboard = React.lazy(() => import("src/pages/USER/Dashboard"))
+const PaymentHistory = React.lazy(() => import("src/pages/USER/PaymentHistory"))
 
 // ERROR
 const NotFoundPage = React.lazy(() => import("src/pages/ErrorPage/NotFoundPage"))
@@ -115,7 +118,7 @@ const App = () => {
           )
         },
         {
-          path: Router.LICH_BOOKING,
+          path: Router.CAC_LICH_HEN,
           element: (
             <LazyLoadingComponent>
               <MyBooking />
@@ -131,10 +134,42 @@ const App = () => {
           )
         },
         {
-          path: Router.CAI_DAT_MAT_KHAU,
+          path: Router.DICH_VU_LICH_LAM_VIEC,
           element: (
             <LazyLoadingComponent>
-              <AccountUser />
+              <ServicesAndSchedules />
+            </LazyLoadingComponent>
+          )
+        },
+        {
+          path: Router.MAU_TOC_CUA_BAN,
+          element: (
+            <LazyLoadingComponent>
+              <MyHairModel />
+            </LazyLoadingComponent>
+          )
+        },
+        {
+          path: `${Router.CAC_LICH_HEN}/:BookingID`,
+          element: (
+            <LazyLoadingComponent>
+              <BookingDetail />
+            </LazyLoadingComponent>
+          )
+        },
+        {
+          path: Router.DASHBOARD,
+          element: (
+            <LazyLoadingComponent>
+              <Dashboard />
+            </LazyLoadingComponent>
+          )
+        },
+        {
+          path: Router.LICH_SU_GIAO_DICH,
+          element: (
+            <LazyLoadingComponent>
+              <PaymentHistory />
             </LazyLoadingComponent>
           )
         },
@@ -186,14 +221,6 @@ const App = () => {
           element: (
             <LazyLoadingComponent>
               <BarberDetail />
-            </LazyLoadingComponent>
-          )
-        },
-        {
-          path: Router.FORGOT_PASSWORD,
-          element: (
-            <LazyLoadingComponent>
-              <ForgotPassword />
             </LazyLoadingComponent>
           )
         },
@@ -283,9 +310,12 @@ const App = () => {
       setLoading(true)
       const res = await UserService.getDetailProfile()
       if (!!res?.isError) return toast.error(res?.msg)
+      const resTab = await CommonService.getListTab()
+      if (!!resTab?.isError) return
       socket.connect()
       socket.emit("add-user-online", res?.data?._id)
       dispatch(globalSlice.actions.setUser(res?.data))
+      dispatch(globalSlice.actions.setListTab(resTab?.data))
       if ([Router.DANG_NHAP, Router.DANG_KY].includes(location.pathname)) {
         handleNavigate(res?.data)
       }

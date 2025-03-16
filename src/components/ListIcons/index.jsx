@@ -152,7 +152,7 @@ const ListIcons = {
   ICON_SUSCESS: <AiOutlineCheckCircle className="fs-18" />,
   ICON_LIST: <AiOutlineUnorderedList className="fs-18" />,
   ICON_NEXT: <AiOutlineArrowRight className="fs-18 mt-8 blue-text" />,
-  ICON_BACK: <AiOutlineArrowLeft className="fs-18" />,
+  ICON_BACK: <AiOutlineArrowLeft />,
   ICON_EDIT: <AiFillEdit className="green-text fs-18" />,
   ICON_VIEW: <AiFillEye className="primary-text fs-18" />,
   ICON_CONFIRM: <AiFillCheckCircle className="fs-18 green-text" />,

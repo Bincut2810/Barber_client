@@ -33,7 +33,7 @@
 }
 
 .third-type-2 {
-  @include className(white, var(--color-primary), var(--color-primary), var(--color-primary-hover), transparent, white)
+  @include className(white, var(--color-primary), var(--color-primary), var(--color-primary), transparent, white)
 }
 
 .red {
@@ -63,7 +63,7 @@
 
 .medium-size {
   font-size: 17px !important;
-  padding: 18px !important;
+  padding: 18px 18px 20px 18px !important;
   border-radius: 25px !important;
 }
 

@@ -10,13 +10,14 @@ import UserService from "src/services/UserService"
 import { DivTimeContainer, PatentChildBorder, ServiceItemStyled, TabStyled } from "./styled"
 import { convertMinuteToHour, convertSchedules } from "src/lib/dateUtils"
 import dayjs from "dayjs"
-import ModalBooking from "./components/ModalBooking"
 import { useDispatch, useSelector } from "react-redux"
 import { globalSelector } from "src/redux/selector"
 import globalSlice from "src/redux/globalSlice"
 import FeedbackService from "src/services/FeedbackService"
 import { toast } from "react-toastify"
 import Feedback from "./components/Feedback"
+import { Roles } from "src/lib/constant"
+import InsertUpdateBooking from "./components/InsertUpdateBooking"
 
 const BarberDetail = () => {
 
@@ -24,8 +25,8 @@ const BarberDetail = () => {
   const [loading, setLoading] = useState(false)
   const [barber, setBarber] = useState()
   const navigate = useNavigate()
-  const [openModalBooking, setOpenModalBooking] = useState(false)
-  const { isLogin } = useSelector(globalSelector)
+  const [openInsertBooking, setOpenInsertBooking] = useState(false)
+  const { isLogin, user } = useSelector(globalSelector)
   const dispatch = useDispatch()
   const location = useLocation()
   const [feedbacks, setFeedbacks] = useState([])
@@ -125,27 +126,29 @@ const BarberDetail = () => {
                         <div className="mr-12 fw-600">{formatMoney(i?.ServicePrice)} VNĐ</div>
                         <div className="fs-13 gray-text">{convertMinuteToHour(i?.ServiceTime)}</div>
                       </div>
-                      <ButtonCustom
-                        className="primary mini-size"
-                        onClick={() => {
-                          if (!isLogin) {
-                            dispatch(globalSlice.actions.setRouterBeforeLogin(location.pathname))
-                            navigate("/dang-nhap")
-                          } else {
-                            setOpenModalBooking({
-                              Service: i,
-                              Services: barber?.Services,
-                              Schedules: barber?.Schedules,
-                              BarberID: barber?._id,
-                              BarberEmail: barber?.Email,
-                              BarberName: barber?.FullName,
-                              BookingSchedules: barber?.BookingSchedules
-                            })
-                          }
-                        }}
-                      >
-                        Book
-                      </ButtonCustom>
+                      {
+                        (!isLogin || (!!isLogin && user?.RoleID !== Roles.ROLE_BARBER)) &&
+                        <ButtonCustom
+                          className="primary mini-size"
+                          onClick={() => {
+                            if (!isLogin) {
+                              dispatch(globalSlice.actions.setRouterBeforeLogin(location.pathname))
+                              navigate("/dang-nhap")
+                            } else {
+                              setOpenInsertBooking({
+                                Services: [i],
+                                BarberServices: barber?.Services,
+                                Schedules: barber?.Schedules,
+                                BarberID: barber?._id,
+                                BarberEmail: barber?.Email,
+                                BarberName: barber?.FullName,
+                              })
+                            }
+                          }}
+                        >
+                          Book
+                        </ButtonCustom>
+                      }
                     </div>
                   </ServiceItemStyled>
                 )
@@ -236,10 +239,10 @@ const BarberDetail = () => {
         </Col>
 
         {
-          !!openModalBooking &&
-          <ModalBooking
-            open={openModalBooking}
-            onCancel={() => setOpenModalBooking(false)}
+          !!openInsertBooking &&
+          <InsertUpdateBooking
+            open={openInsertBooking}
+            onCancel={() => setOpenInsertBooking(false)}
           />
         }
 

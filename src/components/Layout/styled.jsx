@@ -144,7 +144,7 @@ export const MenuUserStyled = styled.div`
     border-inline-end: none !important
   }
   .ant-menu-light .ant-menu-item-selected {
-    background-color: var(--color-primary-hover) !important;
+    background-color: var(--color-primary) !important;
     color: white;
   } 
 `

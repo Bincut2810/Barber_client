@@ -15,11 +15,13 @@ import InputCustom from "src/components/InputCustom"
 import { useSelector } from "react-redux"
 import { globalSelector } from "src/redux/selector"
 import { convertMinuteToHour, disabledBeforeDate } from "src/lib/dateUtils"
+import SpinCustom from "src/components/SpinCustom"
 
-const ModalBooking = ({ open, onCancel }) => {
+const InsertUpdateBooking = ({ open, onCancel, onOk }) => {
 
   const [times, setTimes] = useState([])
   const [bookSchedulesBySelectedDate, setBookSchedulesBySelectedDate] = useState([])
+  const [bookSchedules, setBookSchedules] = useState([])
   const [services, setServices] = useState([])
   const [totalMoney, setTotalMoney] = useState(0)
   const [items, setItems] = useState([])
@@ -43,7 +45,7 @@ const ModalBooking = ({ open, onCancel }) => {
         })
     )
     setBookSchedulesBySelectedDate(
-      open?.BookingSchedules
+      bookSchedules
         ?.filter(i => dayjs(i?.StartTime).format("DD/MM/YYYY") === dayjs(e).format("DD/MM/YYYY"))
         ?.map(i => ({
           StartTime: dayjs(i?.StartTime),
@@ -99,12 +101,13 @@ const ModalBooking = ({ open, onCancel }) => {
     return realDateTime
   }
 
-  const handleCreateBooking = async () => {
+  const handleSubmit = async () => {
     try {
       setLoading(true)
       const values = await form.validateFields()
-      const res = await BookingService.createBooking({
+      const body = {
         ...values,
+        BookingID: open?._id,
         BarberID: open?.BarberID,
         BarberEmail: open?.BarberEmail,
         BarberName: open?.BarberName,
@@ -120,20 +123,52 @@ const ModalBooking = ({ open, onCancel }) => {
           (value, currentValue) => value + currentValue?.ExpensePrice,
           0
         )
-      })
+      }
+      const res = !!open?._id
+        ? await BookingService.updateBooking(body)
+        : await BookingService.createBooking(body)
       if (!!res?.isError) return toast.error(res?.msg)
       toast.success(res?.msg)
-      navigate(Router.LICH_BOOKING)
+      onCancel()
+      if (!!open?.IsMyBookingPage) {
+        onOk()
+      } else {
+        navigate(Router.CAC_LICH_HEN)
+      }
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const getBookingScheduleOfBarber = async () => {
+    try {
+      setLoading(true)
+      const res = await BookingService.getBookingScheduleOfBarber(open?.BarberID)
+      if (!!res?.isError) return
+      setBookSchedules(res?.data)
     } finally {
       setLoading(false)
     }
   }
 
   useEffect(() => {
-    setServices([open?.Service])
+    setServices(open?.Services)
+    setSelectedDate(dayjs(open?.DateAt))
+    setSelectedTime(dayjs(open?.DateAt))
+    getFreeTimeOfBarber(open?.DateAt)
     form.setFieldsValue({
-      CustomerAddress: user?.Address,
-      CustomerPhone: user?.Phone
+      CustomerAddress: !!open?.CustomerAddress
+        ? open?.CustomerAddress
+        : user?.Address,
+      CustomerPhone: !!open?.CustomerPhone
+        ? open?.CustomerPhone
+        : user?.Phone,
+      SelectedDate: !!open?.DateAt
+        ? dayjs(open?.DateAt)
+        : null,
+      SelectedTime: !!open?.DateAt
+        ? dayjs(open?.DateAt)
+        : null,
     })
   }, [])
 
@@ -151,8 +186,8 @@ const ModalBooking = ({ open, onCancel }) => {
         children: (
           <div>
             {
-              open?.Services
-                ?.filter(i => services?.every(s => s?._id !== i?._id))
+              open?.BarberServices
+                ?.filter(i => services?.every(s => s?.ServiceName !== i?.ServiceName))
                 ?.map(i =>
                   <ServiceItemStyled key={i?._id} className="d-flex-sb mb-12">
                     <div>{i?.ServiceName}</div>
@@ -178,6 +213,12 @@ const ModalBooking = ({ open, onCancel }) => {
     ])
   }, [services])
 
+  useEffect(() => {
+    if (!!open?.BarberID) {
+      getBookingScheduleOfBarber()
+    }
+  }, [open?.BarberID])
+
 
   return (
     <ModalCustom
@@ -192,125 +233,126 @@ const ModalBooking = ({ open, onCancel }) => {
             Đóng
           </ButtonCustom>
           <ButtonCustom
-            loading={loading}
             className="primary"
-            onClick={() => handleCreateBooking()}
+            onClick={() => handleSubmit()}
           >
             Lưu
           </ButtonCustom>
         </Space>
       }
     >
-      <Form form={form} layout="vertical">
-        <Row gutter={[8]}>
-          <Col span={24}>
-            <Row gutter={[12]}>
-              <Col span={16}>
-                <Form.Item
-                  name="SelectedDate"
-                  label="Chọn ngày cắt tóc"
-                  rules={[
-                    { required: true, message: "Thông tin không được để trống" },
-                  ]}
-                >
-                  <DatePicker
-                    style={{ width: "100%" }}
-                    format="DD/MM/YYYY"
-                    allowClear={false}
-                    disabledDate={current => disabledBeforeDate(current)}
-                    onChange={e => {
-                      setSelectedDate(e)
-                      getFreeTimeOfBarber(e)
-                    }}
-                  />
-                </Form.Item>
-              </Col>
-              <Col span={8}>
-                <Form.Item
-                  name="SelectedTime"
-                  label="Chọn thời gian"
-                  rules={[
-                    { required: true, message: "Thông tin không được để trống" },
-                  ]}
-                >
-                  <TimePicker
-                    style={{ width: "100%" }}
-                    format="HH:mm"
-                    disabledTime={handleDisabledDateTime}
-                    onChange={currentTime => setSelectedTime(currentTime)}
-                  />
-                </Form.Item>
-              </Col>
-            </Row>
-          </Col>
-          <Col span={12} className="mb-30">
-            <Form.Item
-              name='CustomerAddress'
-              label="Địa chỉ"
-              rules={[
-                { required: true, message: "Thông tin không được để trống" },
-              ]}
-            >
-              <InputCustom placeholder="Nhập vào địa chỉ" />
-            </Form.Item>
-          </Col>
-          <Col span={12} className="mb-30">
-            <Form.Item
-              name='CustomerPhone'
-              label="Số điện thoại"
-              rules={[
-                { required: true, message: "Thông tin không được để trống" },
-                { pattern: getRegexPhoneNumber(), message: "Số điện thoại sai định dạng" }
-              ]}
-            >
-              <InputCustom placeholder="Nhập vào địa chỉ" />
-            </Form.Item>
-          </Col>
-          <Col span={24} className="mb-15">
-            {
-              services?.map((i, idx) =>
-                <ServiceItemStyled key={i?._id} className="d-flex-sb">
-                  <div className="fw-600">{i?.ServiceName}</div>
-                  <div className="d-flex-sb">
-                    <div>
-                      <div className="mr-12 fw-600">{formatMoney(i?.ServicePrice)} VNĐ</div>
-                      <div className="fs-13 gray-text">{convertMinuteToHour(i?.ServiceTime)}</div>
+      <SpinCustom spinning={loading}>
+        <Form form={form} layout="vertical">
+          <Row gutter={[8]}>
+            <Col span={24}>
+              <Row gutter={[12]}>
+                <Col span={16}>
+                  <Form.Item
+                    name="SelectedDate"
+                    label="Chọn ngày cắt tóc"
+                    rules={[
+                      { required: true, message: "Thông tin không được để trống" },
+                    ]}
+                  >
+                    <DatePicker
+                      style={{ width: "100%" }}
+                      format="DD/MM/YYYY"
+                      allowClear={false}
+                      disabledDate={current => disabledBeforeDate(current)}
+                      onChange={e => {
+                        setSelectedDate(e)
+                        getFreeTimeOfBarber(e)
+                      }}
+                    />
+                  </Form.Item>
+                </Col>
+                <Col span={8}>
+                  <Form.Item
+                    name="SelectedTime"
+                    label="Chọn thời gian"
+                    rules={[
+                      { required: true, message: "Thông tin không được để trống" },
+                    ]}
+                  >
+                    <TimePicker
+                      style={{ width: "100%" }}
+                      format="HH:mm"
+                      disabledTime={handleDisabledDateTime}
+                      onChange={currentTime => setSelectedTime(currentTime)}
+                    />
+                  </Form.Item>
+                </Col>
+              </Row>
+            </Col>
+            <Col span={12} className="mb-30">
+              <Form.Item
+                name='CustomerAddress'
+                label="Địa chỉ"
+                rules={[
+                  { required: true, message: "Thông tin không được để trống" },
+                ]}
+              >
+                <InputCustom placeholder="Nhập vào địa chỉ" />
+              </Form.Item>
+            </Col>
+            <Col span={12} className="mb-30">
+              <Form.Item
+                name='CustomerPhone'
+                label="Số điện thoại"
+                rules={[
+                  { required: true, message: "Thông tin không được để trống" },
+                  { pattern: getRegexPhoneNumber(), message: "Số điện thoại sai định dạng" }
+                ]}
+              >
+                <InputCustom placeholder="Nhập vào địa chỉ" />
+              </Form.Item>
+            </Col>
+            <Col span={24} className="mb-15">
+              {
+                services?.map((i, idx) =>
+                  <ServiceItemStyled key={i?._id} className="d-flex-sb">
+                    <div className="fw-600">{i?.ServiceName}</div>
+                    <div className="d-flex-sb">
+                      <div>
+                        <div className="mr-12 fw-600">{formatMoney(i?.ServicePrice)} VNĐ</div>
+                        <div className="fs-13 gray-text">{convertMinuteToHour(i?.ServiceTime)}</div>
+                      </div>
+                      {
+                        services?.length > 1 &&
+                        <ButtonCircle
+                          icon={ListIcons.ICON_CLOSE}
+                          onClick={() => {
+                            const copyServices = [...services]
+                            copyServices.splice(idx, 1)
+                            setServices(copyServices)
+                          }}
+                        />
+                      }
                     </div>
-                    {
-                      services?.length > 1 &&
-                      <ButtonCircle
-                        icon={ListIcons.ICON_CLOSE}
-                        onClick={() => {
-                          const copyServices = [...services]
-                          copyServices.splice(idx, 1)
-                          setServices(copyServices)
-                        }}
-                      />
-                    }
-                  </div>
-                </ServiceItemStyled>
-              )
-            }
-          </Col>
-          <Col span={24} className="mb-30">
-            <Collapse items={items} bordered={false} />
-          </Col>
-          <Col span={24}>
-            <Space
-              className="d-flex-end"
-              style={{
-                position: "sticky",
-                bottom: 0,
-              }}
-            >
-              <div>Total:</div>
-              <div className="fs-18 fw-700">{formatMoney(totalMoney)} VNĐ</div>
-            </Space>
-          </Col>
-        </Row>
-      </Form>
+                  </ServiceItemStyled>
+                )
+              }
+            </Col>
+            <Col span={24} className="mb-30">
+              <Collapse items={items} bordered={false} />
+            </Col>
+            <Col span={24}>
+              <Space
+                className="d-flex-end"
+                style={{
+                  position: "sticky",
+                  bottom: 0,
+                }}
+              >
+                <div>Total:</div>
+                <div className="fs-18 fw-700">{formatMoney(totalMoney)} VNĐ</div>
+              </Space>
+            </Col>
+          </Row>
+        </Form>
+      </SpinCustom>
     </ModalCustom>
   )
 }
 
-export default ModalBooking
+export default InsertUpdateBooking

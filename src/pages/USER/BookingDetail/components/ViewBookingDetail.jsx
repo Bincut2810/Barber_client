@@ -1,17 +1,15 @@
 import { useSelector } from "react-redux"
 import ModalCustom from "src/components/ModalCustom"
-import { getListComboKey } from "src/lib/commonFunction"
-import { Roles, SYSTEM_KEY } from "src/lib/constant"
+import { Roles } from "src/lib/constant"
 import { globalSelector } from "src/redux/selector"
 import dayjs from "dayjs"
 import { formatMoney } from "src/lib/stringUtils"
 import { Col, Descriptions, Row } from "antd"
 import TableCustom from "src/components/TableCustom"
 
-const BookingDetail = ({ open, onCancel }) => {
+const ViewBookingDetail = ({ open, onCancel }) => {
 
-  const { user, listSystemKey } = useSelector(globalSelector)
-  const gender = getListComboKey(SYSTEM_KEY.GENDER, listSystemKey)
+  const { user } = useSelector(globalSelector)
 
   const commonItem = [
     {
@@ -41,6 +39,11 @@ const BookingDetail = ({ open, onCancel }) => {
       key: '5',
       label: 'Địa chỉ khách hàng',
       children: open?.CustomerAddress,
+    },
+    {
+      key: '6',
+      label: 'Số tiền bạn nhận',
+      children: `${formatMoney(open?.TotalExpensePrice)} VNĐ`,
     },
   ]
 
@@ -80,7 +83,7 @@ const BookingDetail = ({ open, onCancel }) => {
       open={open}
       onCancel={onCancel}
       title="Chi tiết booking"
-      width="60vw"
+      width="63vw"
       centered={false}
       footer={null}
     >
@@ -88,8 +91,8 @@ const BookingDetail = ({ open, onCancel }) => {
         <Col span={24}>
           <Descriptions
             items={
-              user?.RoleID === Roles.ROLE_BARBER ?
-                [...commonItem, ...itemForBarber]
+              user?.RoleID === Roles.ROLE_BARBER
+                ? [...commonItem, ...itemForBarber]
                 : commonItem
             }
           />
@@ -114,4 +117,4 @@ const BookingDetail = ({ open, onCancel }) => {
   )
 }
 
-export default BookingDetail
+export default ViewBookingDetail

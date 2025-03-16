@@ -207,12 +207,6 @@ const UserManagement = () => {
           <div className="title-type-1">
             QUẢN LÝ NGƯỜI DÙNG
           </div>
-          <ButtonCustom
-            className="third-type-2"
-          // onClick={() => setOpenModalInsertStaff(true)}
-          >
-            Thêm mới
-          </ButtonCustom>
         </Col>
         <Col span={12}>
           <InputCustom

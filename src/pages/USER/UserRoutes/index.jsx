@@ -10,8 +10,7 @@ const UserRoutes = ({ tokenData, loading }) => {
   return (
     <>
       {
-        !loading
-          ?
+        !loading ?
           !!tokenData &&
             ![Roles.ROLE_ADMIN].includes(tokenData?.RoleID) ?
             <MainLayout tokenData={tokenData}>

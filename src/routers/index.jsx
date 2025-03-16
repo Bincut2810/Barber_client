@@ -8,14 +8,16 @@ const Router = {
   DANG_KY: "/dang-ky",
   DANH_SACH_BARBER: "/danh-sach-barber",
   CHI_TIET_BARBER: "/barber",
-  FORGOT_PASSWORD: "/quen-mat-khau",
   CACH_HOAT_DONG: "/cach-hoat-dong",
 
   // USER
+  DASHBOARD: `${USER}/dashboard`,
   TRANG_CA_NHAN: `${USER}/trang-ca-nhan`,
-  LICH_BOOKING: `${USER}/lich-book`,
+  CAC_LICH_HEN: `${USER}/cac-lich-hen`,
   CHECKOUT: `${USER}/checkout`,
-  CAI_DAT_MAT_KHAU: `${USER}/cai-dat-mat-khau`,
+  DICH_VU_LICH_LAM_VIEC: `${USER}/dich-vu-va-lich-lam-viec`,
+  MAU_TOC_CUA_BAN: `${USER}/mau-toc-cua-ban`,
+  LICH_SU_GIAO_DICH: `${USER}/lich-su-giao-dich`,
 
   // ADMIN
   QUAN_LY_NGUOI_DUNG: `${DASHBOARD}/quan-ly-nguoi-dung`,

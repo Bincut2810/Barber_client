@@ -190,7 +190,12 @@ const Home = () => {
           <Row gutter={[12]}>
             {
               topBarbers?.map(i =>
-                <Col key={i?._id} span={8}>
+                <Col
+                  key={i?._id}
+                  span={8}
+                  className="cursor-pointer"
+                  onClick={() => navigate(`${Router.CHI_TIET_BARBER}/${i?._id}`)}
+                >
                   <TopBarberItem item={i} />
                 </Col>
               )

@@ -13,7 +13,6 @@ import handleCreatePaymentVNPay from "src/lib/getUrlVNPay"
 import ModalSuccessBooking from "./components/ModalSuccessBooking"
 import Router from "src/routers"
 import BookingService from "src/services/BookingService"
-import { PROFIT_PERCENT } from "src/lib/constant"
 
 const RootURLWebsite = import.meta.env.VITE_ROOT_URL_WEBSITE
 
@@ -23,18 +22,10 @@ const CheckoutPage = () => {
   const navigate = useNavigate()
   const [dataPayment, setDataPayment] = useState()
   const [loading, setLoading] = useState(false)
-  const { user } = useSelector(globalSelector)
+  const { user, profitPercent } = useSelector(globalSelector)
   const location = useLocation()
   const queryParams = new URLSearchParams(location.search)
   const [openModalSuccessBooking, setOpenModalSuccessBooking] = useState(false)
-
-  const itemServices = !!dataPayment?.Services?.length
-    ? dataPayment?.Services?.map(i => ({
-      key: i?._id,
-      label: i?.ServiceName,
-      children: `${formatMoney(i?.ServicePrice)} VNĐ`
-    }))
-    : []
 
   const getDataToCheckout = async () => {
     try {
@@ -55,15 +46,11 @@ const CheckoutPage = () => {
         CustomerName: user?.FullName,
         BarberName: dataPayment?.Barber?.FullName,
         BarberEmail: dataPayment?.Barber?.Email,
-      })
-      if (!!resBooking?.isError) return
-      const resPayment = await PaymentService.createPayment({
-        Booking: BookingID,
         Description: `Thanh toán tiền cọc book barber ${dataPayment?.Barber?.FullName}`,
         TotalFee: dataPayment?.TotalPrice - dataPayment?.TotalExpensePrice,
-        Percent: PROFIT_PERCENT
+        Percent: profitPercent
       })
-      if (!!resPayment?.isError) return
+      if (!!resBooking?.isError) return
       setOpenModalSuccessBooking({ FullName: dataPayment?.Barber?.FullName })
     } finally {
       setLoading(false)
@@ -72,7 +59,7 @@ const CheckoutPage = () => {
 
   useEffect(() => {
     getDataToCheckout()
-  }, [BookingID])
+  }, [])
 
 
   useEffect(() => {
@@ -97,16 +84,27 @@ const CheckoutPage = () => {
             </Col>
             <Col span={24}>
               <div>
-                <span className="mr-4 fs-15 fw-600">Barber:</span>
+                <span className="mr-4">Barber:</span>
                 <span>{dataPayment?.Barber?.FullName}</span>
               </div>
             </Col>
             <Col span={24}>
               <div>
-                <div className="mb-6 fs-15 fw-600">Dịch vụ:</div>
-                <Descriptions
-                  items={itemServices}
-                />
+                <div className="fs-15 fw-600">Dịch vụ:</div>
+                {
+                  dataPayment?.Services?.map(i =>
+                    <div key={i?._id} className="mb-12">
+                      <div>
+                        <span style={{ color: "rgba(0, 0, 0, 0.65)" }}>Tên dịch vụ: </span>
+                        <span className="fw-600">{i?.ServiceName}</span>
+                      </div>
+                      <div>
+                        <span style={{ color: "rgba(0, 0, 0, 0.65)" }}>Giá tiền: </span>
+                        <span className="fw-600">{formatMoney(i?.ServicePrice)} VNĐ</span>
+                      </div>
+                    </div>
+                  )
+                }
               </div>
             </Col>
             <Col span={24}>
@@ -115,15 +113,18 @@ const CheckoutPage = () => {
               </div>
             </Col>
             <Col span={24}>
-              <div>
+              <div className="mb-4">
                 <span className="gray-text fs-15 fw-600 mr-4">Số tiền thanh toán:</span>
                 <span className="fs-17 fw-700 primary-text">{formatMoney(dataPayment?.TotalPrice - dataPayment?.TotalExpensePrice)} VNĐ</span>
+              </div>
+              <div>
+                <span className="red-text fw-600 mr-3">LƯU Ý: </span>
+                <span>Chi phí bạn thanh toán chỉ là tiền cọc cho hệ thống. Chi phí còn lại của dịch vụ bạn sẽ thanh toán trực tiếp cho barber khi hoàn thành dịch vụ!</span>
               </div>
             </Col>
             <Col span={24}>
               {
-                !dataPayment?.IsPaid
-                  ?
+                !dataPayment?.IsPaid ?
                   <ButtonCustom
                     className="medium-size primary"
                     onClick={() => handleCreatePaymentVNPay(

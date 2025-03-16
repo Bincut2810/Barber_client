@@ -79,12 +79,16 @@ const UpdateUserProfile = ({ open, onCancel }) => {
     <ModalCustom
       open={open}
       title="Hoàn thiện thông tin cá nhân"
-      onCancel={!!user?.IsFirstLogin ? null : onCancel}
-      closable={user?.IsFirstLogin ? false : true}
-      centered={false}
+      onCancel={onCancel}
       width="60vw"
       footer={
         <Space className="d-flex-end">
+          <ButtonCustom
+            className="third"
+            onClick={() => onCancel()}
+          >
+            Đóng
+          </ButtonCustom>
           <ButtonCustom
             loading={loading}
             className="primary"
