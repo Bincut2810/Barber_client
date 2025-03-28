@@ -1,4 +1,4 @@
-import { Col, Row, Select } from "antd"
+import { Col, Input, Row, Select } from "antd"
 import { useEffect, useState } from "react"
 import SpinCustom from "src/components/SpinCustom"
 import UserService from "src/services/UserService"
@@ -6,6 +6,7 @@ import BarberListItem from "./components/BarberListItem"
 import { useNavigate } from "react-router-dom"
 import Router from "src/routers"
 import InputCustom from "src/components/InputCustom"
+import ListIcons from "src/components/ListIcons"
 
 const BarberList = () => {
 
@@ -14,6 +15,7 @@ const BarberList = () => {
   const navigate = useNavigate()
   const [pagination, setPagination] = useState({
     TextSearch: "",
+    AddressSearch: "",
     PageSize: 10,
     CurrentPage: 1,
     SortByStar: -1
@@ -38,11 +40,21 @@ const BarberList = () => {
   return (
     <SpinCustom spinning={loading}>
       <Row gutter={[12, 16]}>
-        <Col span={18} className="mb-35">
+        <Col span={9} className="mb-35">
           <InputCustom
-            placeholder="Tìm kiếm theo tên, địa chỉ"
+            placeholder="Tìm kiếm theo tên"
             type="isSearch"
             allowClear
+            prefix={ListIcons.ICON_SEARCH}
+            onSearch={e => setPagination(pre => ({ ...pre, TextSearch: e }))}
+          />
+        </Col>
+        <Col span={9} className="mb-35">
+          <InputCustom
+            placeholder="Tìm kiếm theo dịa chỉ"
+            type="isSearch"
+            allowClear
+            prefix={ListIcons.ICON_LOCATION}
             onSearch={e => setPagination(pre => ({ ...pre, TextSearch: e }))}
           />
         </Col>

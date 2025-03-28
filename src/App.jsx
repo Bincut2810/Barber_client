@@ -20,6 +20,7 @@ const AdminRoutes = React.lazy(() => import("src/pages/ADMIN/AdminRoutes"))
 const UserManagement = React.lazy(() => import("src/pages/ADMIN/UserManagement"))
 const PaymentManagement = React.lazy(() => import("src/pages/ADMIN/PaymentManagement"))
 const FeedbackManagement = React.lazy(() => import("src/pages/ADMIN/FeedbackManagement"))
+const DashboardManagement = React.lazy(() => import("src/pages/ADMIN/DashboardManagement"))
 
 // ANONYMOUS
 const AnonymousRoutes = React.lazy(() => import("src/pages/ANONYMOUS/AnonymousRoutes"))
@@ -95,6 +96,14 @@ const App = () => {
           element: (
             <LazyLoadingComponent>
               <FeedbackManagement />
+            </LazyLoadingComponent>
+          )
+        },
+        {
+          path: Router.QUAN_LY_DASHBOARD,
+          element: (
+            <LazyLoadingComponent>
+              <DashboardManagement />
             </LazyLoadingComponent>
           )
         },
@@ -266,7 +275,7 @@ const App = () => {
       navigate(routerBeforeLogin)
     } else {
       if (userInfor.RoleID === Roles.ROLE_ADMIN) {
-        navigate(Router.QUAN_LY_DOANH_THU)
+        navigate(Router.QUAN_LY_DASHBOARD)
       } else {
         navigate(Router.TRANG_CHU)
       }

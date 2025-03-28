@@ -3,7 +3,7 @@ import { HeaderContainerStyled, HeaderStyled } from "../styled"
 import { Col, Menu, Row, Space } from "antd"
 import Logo from "/logo.png"
 import { MenuCommon } from "../MenuItems"
-import { useLocation, useNavigate } from "react-router-dom"
+import { Link, useLocation, useNavigate } from "react-router-dom"
 import Router from "src/routers"
 import { useSelector } from "react-redux"
 import { globalSelector } from "src/redux/selector"
@@ -40,7 +40,7 @@ const Header = () => {
                 <Menu
                   style={{
                     backgroundColor: "transparent",
-                    color: "white",
+                    color: "white !important",
                     width: "100%",
                     justifyContent: "center"
                   }}
@@ -57,24 +57,30 @@ const Header = () => {
             {
               !isLogin ?
                 <Space className="d-flex justify-content-flex-end">
-                  <ButtonCustom
-                    className="third-type-2 mini-size"
-                    onClick={() => navigate(Router.DANG_KY)}
+                  <Link
+                    style={{ color: "white" }}
+                    to={Router.DANG_KY}
                   >
                     Đăng ký
-                  </ButtonCustom>
-                  <div>/</div>
-                  <ButtonCustom
-                    className="third-type-2 mini-size"
-                    onClick={() => navigate(Router.DANG_NHAP)}
+                  </Link>
+                  <div style={{ color: "white" }}>/</div>
+                  <Link
+                    style={{ color: "white" }}
+                    to={Router.DANG_NHAP}
                   >
                     Đăng nhập
-                  </ButtonCustom>
+                  </Link>
                 </Space>
                 :
                 <Space
                   className="d-flex-end cursor-pointer"
-                  onClick={() => navigate(Router.TRANG_CA_NHAN)}
+                  onClick={() => {
+                    if (user?.RoleID === Roles.ROLE_BARBER) {
+                      navigate(Router.DASHBOARD)
+                    } else if (user?.RoleID === Roles.ROLE_USER) {
+                      navigate(Router.CAC_LICH_HEN)
+                    }
+                  }}
                 >
                   <img
                     style={{
@@ -87,7 +93,7 @@ const Header = () => {
                     src={user?.AvatarPath}
                     alt=""
                   />
-                  <div>{user?.FullName}</div>
+                  <div className="white-text">{user?.FullName}</div>
                 </Space>
             }
           </Col>

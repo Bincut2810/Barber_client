@@ -6,7 +6,6 @@ import InputCustom from "src/components/InputCustom"
 import ListIcons from "src/components/ListIcons"
 import ConfirmModal from "src/components/ModalCustom/ConfirmModal"
 import ButtonCircle from "src/components/MyButton/ButtonCircle"
-import ButtonCustom from "src/components/MyButton/ButtonCustom"
 import SpinCustom from "src/components/SpinCustom"
 import TableCustom from "src/components/TableCustom"
 import { getListComboKey } from "src/lib/commonFunction"
@@ -202,8 +201,8 @@ const UserManagement = () => {
 
   return (
     <SpinCustom spinning={loading}>
-      <Row gutter={[8, 16]}>
-        <Col span={24} className="d-flex-sb">
+      <Row gutter={[8, 0]}>
+        <Col span={24} className="d-flex-sb mb-30">
           <div className="title-type-1">
             QUẢN LÝ NGƯỜI DÙNG
           </div>

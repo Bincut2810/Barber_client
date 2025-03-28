@@ -57,13 +57,14 @@ const ServicesAndSchedules = () => {
       <Col span={24}>
         <Descriptions
           title="Thông tin dịch vụ"
+          layout="vertical"
           bordered
           items={
             !!user?.Services?.length
               ? user?.Services?.map(i => ({
                 key: i?._id,
                 label: i?.ServiceName,
-                children: formatMoney(i?.ServicePrice)
+                children: `${formatMoney(i?.ServicePrice)} VNĐ`
               }))
               : []
           }
@@ -75,12 +76,15 @@ const ServicesAndSchedules = () => {
               >
                 Thêm mới
               </ButtonCustom>
-              <ButtonCustom
-                className="third-type-2"
-                onClick={() => setOpenServiceSetting({ isUpdate: true })}
-              >
-                Chỉnh sửa
-              </ButtonCustom>
+              {
+                !!user?.Services?.length &&
+                <ButtonCustom
+                  className="third-type-2"
+                  onClick={() => setOpenServiceSetting({ isUpdate: true })}
+                >
+                  Chỉnh sửa
+                </ButtonCustom>
+              }
             </Space>
           }
         />

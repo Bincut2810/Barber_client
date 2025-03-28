@@ -23,6 +23,7 @@ const Router = {
   QUAN_LY_NGUOI_DUNG: `${DASHBOARD}/quan-ly-nguoi-dung`,
   QUAN_LY_DOANH_THU: `${DASHBOARD}/quan-ly-doanh-thu`,
   QUAN_LY_FEEDBACK: `${DASHBOARD}/quan-ly-danh-gia`,
+  QUAN_LY_DASHBOARD: `${DASHBOARD}/quan-ly-dashboard`,
 
   // Error
   NOT_FOUND: "/not-found",

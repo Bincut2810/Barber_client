@@ -107,7 +107,7 @@ import { HiLocationMarker } from "react-icons/hi"
 import { GiSmartphone } from "react-icons/gi"
 
 const ListIcons = {
-  ICON_SEARCH: <SearchOutlined className="primary-text fs-20" />,
+  ICON_SEARCH: <SearchOutlined />,
   ICON_LOADING: <LoadingOutlined
     style={{
       color: "var(--color-primary)"

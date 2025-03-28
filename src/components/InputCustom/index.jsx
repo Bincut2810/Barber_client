@@ -8,6 +8,7 @@ const InputCustom = ({
   onChange,
   onPressEnter,
   suffix,
+  prefix,
   disabled,
   isBigSize,
   ...remainProps
@@ -31,6 +32,7 @@ const InputCustom = ({
         onChange={onChange}
         onPressEnter={onPressEnter}
         suffix={suffix}
+        prefix={prefix}
         disabled={disabled}
         {...remainProps}
       />

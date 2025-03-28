@@ -14,6 +14,11 @@ export const MenuCommon = () => [
 
 export const MenuAdmin = () => [
   {
+    key: Router.QUAN_LY_DASHBOARD,
+    label: "Dashboard",
+    TabID: 5
+  },
+  {
     key: Router.QUAN_LY_DOANH_THU,
     label: "Doanh thu",
     TabID: 1
@@ -38,14 +43,19 @@ export const MenuAdmin = () => [
 
 export const MenuUser = () => [
   {
-    key: Router.TRANG_CA_NHAN,
-    label: "Thông tin cá nhân",
-    TabID: 1
-  },
-  {
     key: Router.DASHBOARD,
     label: "Dashboard",
     TabID: 2
+  },
+  {
+    key: Router.CAC_LICH_HEN,
+    label: "Các lịch hẹn",
+    TabID: 5
+  },
+  {
+    key: Router.TRANG_CA_NHAN,
+    label: "Thông tin cá nhân",
+    TabID: 1
   },
   {
     key: Router.DICH_VU_LICH_LAM_VIEC,
@@ -56,11 +66,6 @@ export const MenuUser = () => [
     key: Router.MAU_TOC_CUA_BAN,
     label: "Mẫu tóc của bạn",
     TabID: 4
-  },
-  {
-    key: Router.CAC_LICH_HEN,
-    label: "Các lịch hẹn",
-    TabID: 5
   },
   {
     key: Router.LICH_SU_GIAO_DICH,

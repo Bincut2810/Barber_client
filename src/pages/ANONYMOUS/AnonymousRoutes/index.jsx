@@ -17,7 +17,7 @@ const AnonymousRoutes = () => {
           <MainLayout>
             <Outlet />
           </MainLayout>
-          : <Navigate to={Router.QUAN_LY_DOANH_THU} />
+          : <Navigate to={Router.QUAN_LY_DASHBOARD} />
       }
     </>
   )
