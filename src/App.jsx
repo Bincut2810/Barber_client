@@ -355,7 +355,7 @@ const App = () => {
 
   useEffect(() => {
     if (!!user?.IsFirstLogin) {
-      setOpenUpdateUserProfile(user)
+      setOpenUpdateUserProfile(true)
     }
   }, [user])
 

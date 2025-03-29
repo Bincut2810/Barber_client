@@ -79,16 +79,19 @@ const UpdateUserProfile = ({ open, onCancel }) => {
     <ModalCustom
       open={open}
       title="Hoàn thiện thông tin cá nhân"
-      onCancel={onCancel}
+      onCancel={!user?.IsFirstLogin ? onCancel : null}
       width="60vw"
       footer={
         <Space className="d-flex-end">
-          <ButtonCustom
-            className="third"
-            onClick={() => onCancel()}
-          >
-            Đóng
-          </ButtonCustom>
+          {
+            !user?.IsFirstLogin &&
+            <ButtonCustom
+              className="third"
+              onClick={() => onCancel()}
+            >
+              Đóng
+            </ButtonCustom>
+          }
           <ButtonCustom
             loading={loading}
             className="primary"
@@ -104,6 +107,7 @@ const UpdateUserProfile = ({ open, onCancel }) => {
         filesCertificate={filesCertificate}
         setFilesCertificate={setFilesCertificate}
       />
+      <div className="gray-text">Hãy điền đầy đủ thông tin cá nhân và các thông tin liên quan đến dịch vụ của bạn để trở thành barber</div>
     </ModalCustom>
   )
 }

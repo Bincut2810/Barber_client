@@ -24,7 +24,12 @@ const ServiceSetting = ({ open, onCancel }) => {
       setLoading(true)
       const values = await form.validateFields()
       const res = await UserService.updateService({
-        Services: values?.services?.map(i => i)
+        Services: !open?.isUpdate
+          ? [
+            ...user?.Services,
+            ...values?.services?.map(i => i)
+          ]
+          : values?.services?.map(i => i)
       })
       if (!!res?.isError) return
       toast.success(res?.msg)

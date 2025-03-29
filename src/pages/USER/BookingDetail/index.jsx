@@ -20,6 +20,7 @@ import ButtonCustom from "src/components/MyButton/ButtonCustom"
 import SendFeedback from "./components/SendFeedback"
 import ViewBookingDetail from "./components/ViewBookingDetail"
 import InsertUpdateBooking from "src/pages/ANONYMOUS/BarberDetail/components/InsertUpdateBooking"
+import ModalReasonReject from "./components/ModalReasonReject"
 
 const BookingDetail = () => {
 
@@ -32,6 +33,7 @@ const BookingDetail = () => {
   const [openViewBookingDetail, setOpenViewBookingDetail] = useState(false)
   const [openSendFeedback, setOpenSendFeedback] = useState(false)
   const [openUpdateBooking, setOpenUpdateBooking] = useState(false)
+  const [openModalResonReject, setOpenModalResonReject] = useState(false)
 
   const getDetailBooking = async () => {
     try {
@@ -126,24 +128,16 @@ const BookingDetail = () => {
       isDisabled: booking?.ButtonDisabled?.IsReject,
       icon: ListIcons?.ICON_CLOSE,
       onClick: () => {
-        ConfirmModal({
-          description: `Bạn có chắc chắn hủy booking này không?`,
-          onOk: close => {
-            changeBookingStatus(
-              {
-                BookingID: booking?._id,
-                BookingStatus: 3,
-                CustomerName: booking?.Customer?.FullName,
-                CustomerEmail: booking?.Customer?.Email,
-                BarberName: booking?.Barber?.FullName,
-                BarberEmail: booking?.Barber?.Email,
-              },
-              user?.RoleID === Roles.ROLE_BARBER
-                ? booking?.Customer?._id
-                : booking?.Barber?._id
-            )
-            close()
-          }
+        setOpenModalResonReject({
+          BookingID: booking?._id,
+          BookingStatus: 3,
+          CustomerName: booking?.Customer?.FullName,
+          CustomerEmail: booking?.Customer?.Email,
+          BarberName: booking?.Barber?.FullName,
+          BarberEmail: booking?.Barber?.Email,
+          Receiver: user?.RoleID === Roles.ROLE_BARBER
+            ? booking?.Customer?._id
+            : booking?.Barber?._id
         })
       }
     },
@@ -277,6 +271,15 @@ const BookingDetail = () => {
           <InsertUpdateBooking
             open={openUpdateBooking}
             onCancel={() => setOpenUpdateBooking(false)}
+          />
+        }
+
+        {
+          !!openModalResonReject &&
+          <ModalReasonReject
+            open={openModalResonReject}
+            onCancel={() => setOpenModalResonReject(false)}
+            onOk={getDetailBooking}
           />
         }
 
