@@ -21,7 +21,7 @@ const StatisticBookingByMonth = ({ totalBooking }) => {
         data: totalBooking?.TotalBookingByMonth?.map(item => item?.Total),
         type: 'line',
         smooth: true,
-        name: "Giáo viên"
+        name: "Barber"
       },
     ],
   }
